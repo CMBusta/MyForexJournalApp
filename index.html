@@ -2663,27 +2663,59 @@
                   complete: async (results) => {
                     const rows = results.data;
                     for (const r of rows) {
-                      const entry = {
-                        date: r.date || "",
-                        time: r.time || "",
-                        pair: r.pair || "GBP/USD",
-                        direction: r.direction || "Buy",
-                        strategy: r.strategy || "",
-                        timeFrame: r.timeFrame || "M1",
-                        entryPrice: r.entryPrice || "",
-                        slPrice: r.slPrice || "",
-                        tpPrice: r.tpPrice || "",
-                        exitPrice: r.exitPrice || "",
-                        exitReason: r.exitReason || "TP",
-                        lotSize: r.lotSize || "",
-                        setupGrade: r.setupGrade || "A",
-                        didFollowPlan: r.didFollowPlan || "Yes",
-                        emotionalState: r.emotionalState || "Calm",
-                        preTradeImage: r.preTradeImage || "",
-                        postTradeImage: r.postTradeImage || "",
-                        lessonsLearned: r.lessonsLearned || "",
-                        notes: r.notes || "",
-                      };
+                      
+const convertIfBase64 = (str) => {
+  if (!str || typeof str !== 'string') return null;
+  if (str.startsWith('data:image')) {
+    const mime = str.substring(5, str.indexOf(';')) || 'image/jpeg';
+    const b64 = str.split(',')[1];
+    try {
+      const byteString = atob(b64);
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+      return new Blob([ab], { type: mime });
+    } catch (e) { console.warn('Failed to convert data URL to Blob', e); return null; }
+  }
+  // raw base64 (may contain whitespace)
+  const cleaned = str.replace(/\s+/g, '');
+  if (/^[A-Za-z0-9+/=]+$/.test(cleaned)) {
+    try {
+      const byteString = atob(cleaned);
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+      return new Blob([ab], { type: 'image/jpeg' });
+    } catch (e) { console.warn('Failed to convert raw base64 to Blob', e); return null; }
+  }
+  return null;
+};
+
+const preBlob = convertIfBase64(r.preTradeImage);
+const postBlob = convertIfBase64(r.postTradeImage);
+
+const entry = {
+  date: r.date || "",
+  time: r.time || "",
+  pair: r.pair || "GBP/USD",
+  direction: r.direction || "Buy",
+  strategy: r.strategy || "",
+  timeFrame: r.timeFrame || "M1",
+  entryPrice: r.entryPrice || "",
+  slPrice: r.slPrice || "",
+  tpPrice: r.tpPrice || "",
+  exitPrice: r.exitPrice || "",
+  exitReason: r.exitReason || "TP",
+  lotSize: r.lotSize || "",
+  setupGrade: r.setupGrade || "A",
+  didFollowPlan: r.didFollowPlan || "Yes",
+  emotionalState: r.emotionalState || "Calm",
+  preTradeImage: preBlob || (r.preTradeImage || ""),
+  postTradeImage: postBlob || (r.postTradeImage || ""),
+  lessonsLearned: r.lessonsLearned || "",
+  notes: r.notes || ""
+};
+
                       if (entry.id) delete entry.id;
                       await addItem(STORE_ENTRIES, entry);
                     }
