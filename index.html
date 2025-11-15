@@ -205,7 +205,7 @@
         overflow-y: auto;
       }
     </style>
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
       tailwind.config = { darkMode: "class" };
@@ -411,6 +411,15 @@
         type="file"
       />
       <script>
+        let currentEntries = [];
+        let currentStrategies = [];
+
+        window.showMessageModal =
+          window.showMessageModal ||
+          function (msg, type) {
+            alert(`${type ? type.toUpperCase() + ": " : ""}${msg}`);
+          };
+
         const importBtn = document.getElementById("importCsvBtn");
         const csvInput = document.getElementById("csvFileInput");
 
@@ -2041,88 +2050,97 @@
           );
 
           function populateFormForEdit(entry) {
-  try {
-    const modal = document.getElementById("addEntryModal");
-    const modalContent = document.getElementById("addEntryModalContent");
-    
-    // Show the modal
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
-    modal.style.opacity = "1";
-    modalContent.style.transform = "scale(1)";
-    modalContent.style.opacity = "1";
+            try {
+              const modal = document.getElementById("addEntryModal");
+              const modalContent = document.getElementById(
+                "addEntryModalContent"
+              );
 
-    // Prefill input fields with current entry data
-    document.getElementById("date").value = entry.date || "";
-    document.getElementById("time").value = entry.time || "";
-    document.getElementById("pair").value = entry.pair || "GBP/USD";
-    document.getElementById("direction").value = entry.direction || "Buy";
-    document.getElementById("strategy").value = entry.strategy || "";
-    document.getElementById("timeFrame").value = entry.timeFrame || "M1";
-    document.getElementById("entryPrice").value = entry.entryPrice || "";
-    document.getElementById("slPrice").value = entry.slPrice || "";
-    document.getElementById("tpPrice").value = entry.tpPrice || "";
-    document.getElementById("exitPrice").value = entry.exitPrice || "";
-    document.getElementById("exitReason").value = entry.exitReason || "TP";
-    document.getElementById("lotSize").value = entry.lotSize || "";
-    document.getElementById("setupGrade").value = entry.setupGrade || "A";
-    document.getElementById("didFollowPlan").value = entry.didFollowPlan || "Yes";
-    document.getElementById("emotionalState").value = entry.emotionalState || "Calm";
-    document.getElementById("lessonsLearned").value = entry.lessonsLearned || "";
-    document.getElementById("notes").value = entry.notes || "";
+              // Show the modal
+              modal.classList.remove("hidden");
+              modal.classList.add("flex");
+              modal.style.opacity = "1";
+              modalContent.style.transform = "scale(1)";
+              modalContent.style.opacity = "1";
 
-    // Set the entry ID for editing mode
-    journalForm.dataset.editingId = entry.id;
-    submitBtn.querySelector("span").textContent = "Save Changes";
+              // Prefill input fields with current entry data
+              document.getElementById("date").value = entry.date || "";
+              document.getElementById("time").value = entry.time || "";
+              document.getElementById("pair").value = entry.pair || "GBP/USD";
+              document.getElementById("direction").value =
+                entry.direction || "Buy";
+              document.getElementById("strategy").value = entry.strategy || "";
+              document.getElementById("timeFrame").value =
+                entry.timeFrame || "M1";
+              document.getElementById("entryPrice").value =
+                entry.entryPrice || "";
+              document.getElementById("slPrice").value = entry.slPrice || "";
+              document.getElementById("tpPrice").value = entry.tpPrice || "";
+              document.getElementById("exitPrice").value =
+                entry.exitPrice || "";
+              document.getElementById("exitReason").value =
+                entry.exitReason || "TP";
+              document.getElementById("lotSize").value = entry.lotSize || "";
+              document.getElementById("setupGrade").value =
+                entry.setupGrade || "A";
+              document.getElementById("didFollowPlan").value =
+                entry.didFollowPlan || "Yes";
+              document.getElementById("emotionalState").value =
+                entry.emotionalState || "Calm";
+              document.getElementById("lessonsLearned").value =
+                entry.lessonsLearned || "";
+              document.getElementById("notes").value = entry.notes || "";
 
-    // Re-render strategy selectors (highlighting selected strategies)
-    renderStrategySelectors();
-    
-    // Highlight selected strategies
-    const selectedStrategies = (entry.strategy || "")
-      .split(" + ")
-      .map((s) => s.trim());
-    document
-      .querySelectorAll("#indicatorsContainer button")
-      .forEach((btn) => {
-        if (selectedStrategies.includes(btn.textContent.trim())) {
-          btn.classList.add(
-            "ring-2",
-            "ring-offset-2",
-            "ring-indigo-500",
-            "dark:ring-violet-400"
-          );
-        } else {
-          btn.classList.remove(
-            "ring-2",
-            "ring-offset-2",
-            "ring-indigo-500",
-            "dark:ring-violet-400"
-          );
-        }
-      });
+              // Set the entry ID for editing mode
+              journalForm.dataset.editingId = entry.id;
+              submitBtn.querySelector("span").textContent = "Save Changes";
 
-    // Set the image fields only if there are uploaded images
-    const preImageField = document.getElementById("preTradeImage");
-    const postImageField = document.getElementById("postTradeImage");
+              // Re-render strategy selectors (highlighting selected strategies)
+              renderStrategySelectors();
 
-    // If there is an existing image for preTradeImage, keep it
-    if (entry.preTradeImage) {
-      preImageField.setAttribute("src", entry.preTradeImage);
-      preImageField.setAttribute("alt", "Pre-Trade Image");
-    }
+              // Highlight selected strategies
+              const selectedStrategies = (entry.strategy || "")
+                .split(" + ")
+                .map((s) => s.trim());
+              document
+                .querySelectorAll("#indicatorsContainer button")
+                .forEach((btn) => {
+                  if (selectedStrategies.includes(btn.textContent.trim())) {
+                    btn.classList.add(
+                      "ring-2",
+                      "ring-offset-2",
+                      "ring-indigo-500",
+                      "dark:ring-violet-400"
+                    );
+                  } else {
+                    btn.classList.remove(
+                      "ring-2",
+                      "ring-offset-2",
+                      "ring-indigo-500",
+                      "dark:ring-violet-400"
+                    );
+                  }
+                });
 
-    // If there is an existing image for postTradeImage, keep it
-    if (entry.postTradeImage) {
-      postImageField.setAttribute("src", entry.postTradeImage);
-      postImageField.setAttribute("alt", "Post-Trade Image");
-    }
+              // Set the image fields only if there are uploaded images
+              const preImageField = document.getElementById("preTradeImage");
+              const postImageField = document.getElementById("postTradeImage");
 
-  } catch (err) {
-    console.error(err);
-  }
-}
+              // If there is an existing image for preTradeImage, keep it
+              if (entry.preTradeImage) {
+                preImageField.setAttribute("src", entry.preTradeImage);
+                preImageField.setAttribute("alt", "Pre-Trade Image");
+              }
 
+              // If there is an existing image for postTradeImage, keep it
+              if (entry.postTradeImage) {
+                postImageField.setAttribute("src", entry.postTradeImage);
+                postImageField.setAttribute("alt", "Post-Trade Image");
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          }
 
           // Handle form submit (add or update)
           if (journalForm) {
@@ -3757,7 +3775,9 @@
           `[data-strategy-name="${strategyName}"]`
         );
         if (elements.length === 0) {
-          console.warn(`No elements found for strategy: ${strategyName}`);
+          console.debug(
+            `INFO: No visible elements found for strategy: ${strategyName}.`
+          );
           return;
         }
 
@@ -5138,10 +5158,7 @@
               // This stops the old entry data from being submitted as a new entry.
               if (form) {
                 form.reset();
-              } // close modal if present
-
-              const modal = document.getElementById("addEntryModal");
-              if (modal) modal.classList.add("hidden");
+              }
 
               // ... (Rest of the code) ...
 
