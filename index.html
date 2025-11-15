@@ -5294,5 +5294,223 @@
 
       window.addEventListener("DOMContentLoaded", initApp);
     </script>
-  </body>
+  
+<!-- BEGIN RUNTIME OVERRIDE: FORCE BLOB IMAGE SAVING -->
+<script>
+(function(){
+  // Helpers
+  async function fileToBlob(file, maxWidth=800) {
+    if (!file) return null;
+    if (file instanceof Blob) return file;
+    return await new Promise((resolve, reject) => {
+      try {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            try {
+              const canvas = document.createElement('canvas');
+              const scale = Math.min(1, maxWidth / img.width);
+              canvas.width = Math.round(img.width * scale);
+              canvas.height = Math.round(img.height * scale);
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              canvas.toBlob((blob)=>resolve(blob), 'image/jpeg', 0.8);
+            } catch (err) { reject(err); }
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      } catch (err) { reject(err); }
+    });
+  }
+
+  function blobToBase64(blob){
+    return new Promise((resolve,reject)=>{
+      if (!blob) return resolve(null);
+      const r = new FileReader();
+      r.onloadend = ()=>{ const parts = r.result.split(','); resolve(parts[1]); };
+      r.onerror = reject;
+      r.readAsDataURL(blob);
+    });
+  }
+
+  function setImgSrc(el, data){
+    if(!el) return;
+    try{
+      if (data && (typeof Blob !== 'undefined') && data instanceof Blob){
+        if (el.dataset.objurl) { URL.revokeObjectURL(el.dataset.objurl); delete el.dataset.objurl; }
+        const url = URL.createObjectURL(data);
+        el.src = url;
+        el.dataset.objurl = url;
+      } else if (data){
+        el.src = data;
+      } else {
+        el.removeAttribute('src');
+      }
+    } catch(e){ console.warn(e); }
+  }
+
+  // Intercept the form submit early in capture phase to prevent existing handlers that convert to base64
+  document.addEventListener('submit', async function(ev){
+    // Only intercept the main journal form
+    try{
+      const form = ev.target;
+      if (!form || !(form.id === 'journalForm' || form.querySelector('#entryPrice') || form.querySelector('[name=\"entryPrice\"]'))) return;
+      // Stop other handlers from running
+      ev.stopImmediatePropagation();
+      ev.preventDefault();
+
+      // Build entry object (similar to app's logic)
+      const fd = new FormData(form);
+      const entry = {};
+      for (const [k,v] of fd.entries()) entry[k]=v;
+
+      // strategies
+      if (typeof window.getSelectedStrategies === 'function') {
+        const sel = window.getSelectedStrategies();
+        if (sel && sel.length) entry.strategies = sel;
+      }
+
+      // handle images: if file selected -> convert to Blob; else if dataset.existingBlob -> reuse DB blob; else if dataset.existing (string) -> keep string
+      const preInput = document.getElementById('preTradeImage');
+      const postInput = document.getElementById('postTradeImage');
+
+      async function resolveInput(inputEl){
+        if (!inputEl) return null;
+        if (inputEl.files && inputEl.files.length) {
+          return await fileToBlob(inputEl.files[0]);
+        }
+        if (inputEl.dataset && inputEl.dataset.existingblob === '1') {
+          // indicate to reuse existing blob: we set special marker __REUSE_BLOB__
+          return '__REUSE_BLOB__';
+        }
+        if (inputEl.dataset && inputEl.dataset.existing) return inputEl.dataset.existing;
+        return null;
+      }
+
+      const preResolved = await resolveInput(preInput);
+      const postResolved = await resolveInput(postInput);
+
+      // If editing an entry, we should fetch the existing entry to reuse blobs when needed
+      let editingId = null;
+      if (form.dataset && form.dataset.editingId) editingId = Number(form.dataset.editingId);
+      if (!editingId) {
+        // try other possible sources
+        if (entry.id) editingId = Number(entry.id);
+      }
+
+      // If reuse markers present and editingId known, fetch existing and reuse actual blob
+      if (editingId && (preResolved==='__REUSE_BLOB__' || postResolved==='__REUSE_BLOB__')){
+        if (typeof window.getEntryById === 'function') {
+          try{
+            const existing = await window.getEntryById(Number(editingId));
+            if (preResolved==='__REUSE_BLOB__' && existing && existing.preTradeImage) entry.preTradeImage = existing.preTradeImage;
+            else if (preResolved && preResolved!=='__REUSE_BLOB__') entry.preTradeImage = preResolved;
+            if (postResolved==='__REUSE_BLOB__' && existing && existing.postTradeImage) entry.postTradeImage = existing.postTradeImage;
+            else if (postResolved && postResolved!=='__REUSE_BLOB__') entry.postTradeImage = postResolved;
+          } catch(e){ 
+            if (preResolved && preResolved!=='__REUSE_BLOB__') entry.preTradeImage = preResolved;
+            if (postResolved && postResolved!=='__REUSE_BLOB__') entry.postTradeImage = postResolved;
+          }
+        } else {
+          if (preResolved && preResolved!=='__REUSE_BLOB__') entry.preTradeImage = preResolved;
+          if (postResolved && postResolved!=='__REUSE_BLOB__') entry.postTradeImage = postResolved;
+        }
+      } else {
+        if (preResolved && preResolved!=='__REUSE_BLOB__') entry.preTradeImage = preResolved;
+        if (postResolved && postResolved!=='__REUSE_BLOB__') entry.postTradeImage = postResolved;
+      }
+
+      // If entries should store blob objects directly, keep Blobs. For any string dataURLs, they remain strings.
+      // Save entry to DB using existing putItem/addItem/putEntry functions if available
+      if (editingId) entry.id = editingId;
+      try {
+        if (typeof window.putEntry === 'function') {
+          await window.putEntry(entry);
+        } else if (typeof window.putItem === 'function') {
+          await window.putItem('entries', entry);
+        } else if (typeof window.addItem === 'function' && !editingId) {
+          await window.addItem('entries', entry);
+        } else if (typeof window.putItem === 'function') {
+          await window.putItem('entries', entry);
+        } else {
+          // fallback to indexedDB direct put
+          if (typeof window.openDB === 'function') {
+            const db = await window.openDB();
+            const tx = db.transaction('entries','readwrite');
+            tx.objectStore('entries').put(entry);
+            await tx.complete;
+          }
+        }
+      } catch(err){
+        console.error('Override save failed', err);
+        try { alert('Failed to save entry (override): '+err.message); } catch(e) {}
+        return;
+      }
+
+      // Refresh UI: try to call existing refresh functions
+      if (typeof window.renderJournalEntries === 'function') {
+        try { await window.renderJournalEntries(); } catch(e) {}
+      } else if (typeof window.loadEntries === 'function') {
+        try { await window.loadEntries(); } catch(e) {}
+      } else {
+        try { location.reload(); } catch(e) {}
+      }
+
+      // Clean up form
+      try { form.reset(); } catch(e) {}
+      const modal = document.getElementById('addEntryModal');
+      if (modal) modal.classList.add('hidden');
+
+      // Show success if available
+      if (typeof window.showMessageModal === 'function') {
+        try { window.showMessageModal('Entry saved successfully (blob override).','success'); } catch(e) {}
+      } else {
+        try { console.log('Saved (override)'); } catch(e) {}
+      }
+    } catch(e){
+      console.error('Submit override error', e);
+    }
+  }, true /* useCapture to run before default handlers */);
+  
+  // Also patch image thumbnail application to support Blob -> objectURL
+  function patchRenderThumbnails(){
+    try{
+      const list = document.getElementById('journalList') || document.querySelector('.journal-list');
+      if (!list) return;
+      // when renderJournalEntries runs it will call existing logic which sets src to string;
+      // We will post-process cards to convert any Blob stored in DB to objectURLs for img.src
+      if (typeof window.renderJournalEntries === 'function') {
+        const old = window.renderJournalEntries;
+        window.renderJournalEntries = async function(filteredEntries){
+          await old(filteredEntries);
+          try{
+            const items = document.querySelectorAll('[data-entry-id]');
+            for (const el of items){
+              const id = el.dataset.entryId || el.getAttribute('data-entry-id');
+              if (!id) continue;
+              if (typeof window.getEntryById === 'function') {
+                const data = await window.getEntryById(Number(id));
+                if (!data) continue;
+                const preImg = el.querySelector('#preThumb, .preThumb, .pre-trade-img, img.pre-trade');
+                const postImg = el.querySelector('#postThumb, .postThumb, .post-trade-img, img.post-trade');
+                if (preImg) setImgSrc(preImg, data.preTradeImage);
+                if (postImg) setImgSrc(postImg, data.postTradeImage);
+              }
+            }
+          } catch(e){ console.warn(e); }
+        }
+      }
+    } catch(e){ console.warn('patchRenderThumbnails failed', e); }
+  }
+  // Run once DOM ready
+  if (document.readyState === 'complete' || document.readyState === 'interactive') patchRenderThumbnails();
+  else document.addEventListener('DOMContentLoaded', patchRenderThumbnails);
+})();
+</script>
+<!-- END RUNTIME OVERRIDE -->
+</body>
 </html>
