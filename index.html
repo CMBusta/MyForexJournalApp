@@ -488,12 +488,24 @@
             </select>
           </div>
           
-          <button
-            type="submit"
-            class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out shadow-md h-10 sm:mt-6"
-          >
-            Add
-          </button>
+          <input type="hidden" id="editStrategyName" /> 
+
+          <div class="sm:col-span-1 flex space-x-2"> 
+            <button
+                type="submit"
+                id="saveStrategyBtn"
+                class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out shadow-md h-10 sm:mt-6"
+            >
+                Add
+            </button>
+            <button
+                type="button"
+                id="cancelStrategyEditBtn"
+                class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out shadow-md h-10 sm:mt-6 hidden"
+            >
+                Cancel
+            </button>
+          </div>
         </form>
         <ul
           id="strategyList"
@@ -666,6 +678,7 @@
               }
           } else if (storeName === STORE_STRATEGIES) {
               // Save a strategy. Name is the primary key. (Updated columns)
+              // Uses INSERT OR REPLACE for both adding and updating (since name is PK)
               const sql = `INSERT OR REPLACE INTO ${STORE_STRATEGIES} (name, description, bgColor, fontColor, borderColor, fontType) VALUES (?, ?, ?, ?, ?, ?)`;
               await Sqlite.run({ 
                   database: db, 
@@ -737,6 +750,11 @@
       const strategyFontColorInput = document.getElementById("strategyFontColor");
       const strategyBorderColorInput = document.getElementById("strategyBorderColor");
       const strategyFontTypeInput = document.getElementById("strategyFontType");
+      
+      // Strategy Edit/Save/Cancel elements (NEW REFERENCES)
+      const editStrategyNameField = document.getElementById("editStrategyName");
+      const saveStrategyBtn = document.getElementById("saveStrategyBtn");
+      const cancelStrategyEditBtn = document.getElementById("cancelStrategyEditBtn");
 
       // Image fields
       const preTradeImageFile = document.getElementById("preTradeImageFile");
@@ -1266,51 +1284,119 @@
       });
 
       // =========================================================================================================================
-      // 4. Strategy Management Logic
+      // 4. Strategy Management Logic (UPDATED)
       // =========================================================================================================================
+      
+      /**
+       * Resets the strategy form to its 'Add' state.
+       */
+      function resetStrategyForm() {
+          strategyForm.reset();
+          strategyBgColorInput.value = '#5046e51a'; 
+          strategyFontColorInput.value = '#4338ca'; 
+          strategyBorderColorInput.value = '#4338ca';
+          strategyFontTypeInput.value = 'inherit';
+          editStrategyNameField.value = '';
+          saveStrategyBtn.textContent = 'Add';
+          saveStrategyBtn.classList.remove("bg-orange-500", "hover:bg-orange-600");
+          saveStrategyBtn.classList.add("bg-indigo-500", "hover:bg-indigo-600");
+          cancelStrategyEditBtn.classList.add('hidden');
+      }
 
       /**
-       * Handles strategy form submission (Add new strategy).
+       * Handles strategy form submission (Add/Update).
        */
       strategyForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const name = strategyNameInput.value.trim();
-        const bgColor = strategyBgColorInput.value;
-        const fontColor = strategyFontColorInput.value;
-        const borderColor = strategyBorderColorInput.value;
-        const fontType = strategyFontTypeInput.value;
+        const newName = strategyNameInput.value.trim();
+        const isEditing = editStrategyNameField.value !== '';
+        const oldName = editStrategyNameField.value;
 
-        if (name && !tradingStrategiesMap.has(name)) {
-          const newStrategy = { 
-              name, 
-              description: null, 
-              bgColor, 
-              fontColor, 
-              borderColor, 
-              fontType 
-          };
-          try {
+        if (!newName) {
+            alert("Strategy name cannot be empty.");
+            return;
+        }
+
+        // Check for conflicts: 
+        // 1. If editing and changing the name to an already existing name
+        // 2. If adding a new strategy with an existing name
+        if ((isEditing && oldName !== newName && tradingStrategiesMap.has(newName)) || (!isEditing && tradingStrategiesMap.has(newName))) {
+            alert(`Strategy "${newName}" already exists. Please choose a different name.`);
+            return;
+        }
+
+        const newStrategy = { 
+            name: newName, 
+            description: null, 
+            bgColor: strategyBgColorInput.value, 
+            fontColor: strategyFontColorInput.value, 
+            borderColor: strategyBorderColorInput.value, 
+            fontType: strategyFontTypeInput.value
+        };
+
+        try {
+            // 1. If name changed during edit, ensure it's not used in a trade before deleting the old one.
+            if (isEditing && oldName !== newName) {
+                const isUsed = journalEntries.some(e => 
+                    e.strategy && e.strategy.split(STRATEGY_DELIMITER).map(s => s.trim()).includes(oldName)
+                );
+                
+                if (isUsed) {
+                    alert(`Cannot rename strategy "${oldName}" because it is currently used in one or more trade entries. Please delete all references before renaming.`);
+                    return;
+                }
+                
+                // If not used, safely delete the old strategy entry
+                await deleteItem(STORE_STRATEGIES, oldName);
+                tradingStrategiesMap.delete(oldName);
+            }
+
+            // 2. Insert/Update the new strategy (INSERT OR REPLACE handles updates by newName)
             await addItem(STORE_STRATEGIES, newStrategy);
-            tradingStrategiesMap.set(name, newStrategy);
+            tradingStrategiesMap.set(newName, newStrategy);
             
-            // Clear input fields and reset color pickers to default
-            strategyNameInput.value = "";
-            strategyBgColorInput.value = '#5046e51a'; 
-            strategyFontColorInput.value = '#4338ca'; 
-            strategyBorderColorInput.value = '#4338ca';
-            strategyFontTypeInput.value = 'inherit';
-            
+            // 3. Cleanup and Re-render
+            resetStrategyForm();
             renderStrategies();
-            showToast(`Strategy '${name}' added with custom styles.`);
-          } catch (error) {
-            console.error("Error adding strategy:", error);
-            alert("Error adding strategy: " + error.message);
-          }
-        } else if (tradingStrategiesMap.has(name)) {
-            alert(`Strategy "${name}" already exists.`);
+            showToast(`Strategy '${newName}' ${isEditing ? 'updated' : 'added'}!`);
+            
+        } catch (error) {
+            console.error("Error saving/updating strategy:", error);
+            alert("Error saving/updating strategy: " + error.message);
         }
       });
+      
+      /**
+       * Populates the strategy form for editing.
+       * @param {string} name - The name of the strategy to edit.
+       */
+      window.editStrategy = function(name) {
+          const strategy = tradingStrategiesMap.get(name);
+          if (!strategy) return;
+          
+          // Scroll to the form
+          document.getElementById("strategy-section").scrollIntoView({ behavior: "smooth", block: "start" });
+
+          // Populate form fields
+          strategyNameInput.value = strategy.name;
+          strategyBgColorInput.value = strategy.bgColor;
+          strategyFontColorInput.value = strategy.fontColor;
+          strategyBorderColorInput.value = strategy.borderColor;
+          strategyFontTypeInput.value = strategy.fontType;
+          
+          // Set hidden field to indicate editing
+          editStrategyNameField.value = strategy.name;
+          
+          // Change button text and color
+          saveStrategyBtn.textContent = 'Update Strategy';
+          saveStrategyBtn.classList.remove("bg-indigo-500", "hover:bg-indigo-600");
+          saveStrategyBtn.classList.add("bg-orange-500", "hover:bg-orange-600");
+          cancelStrategyEditBtn.classList.remove('hidden');
+      }
+
+      // Listener for the new Cancel Edit button on the Strategy form
+      cancelStrategyEditBtn.addEventListener('click', resetStrategyForm);
 
       /**
        * Renders the list of strategies in the management section and updates the select dropdown.
@@ -1319,7 +1405,7 @@
         // Convert map values to array for sorting and rendering
         const strategiesArray = Array.from(tradingStrategiesMap.values()).sort((a, b) => a.name.localeCompare(b.name));
 
-        // 1. Render management list
+        // 1. Render management list (ADDED EDIT BUTTON)
         strategyList.innerHTML = strategiesArray
           .map((s) => {
             const style = `
@@ -1329,6 +1415,9 @@
                 font-family: ${s.fontType || 'inherit'};
             `;
 
+            // Note: We use .replace(/'/g, "\\'") to handle names with single quotes
+            const escapedName = s.name.replace(/'/g, "\\'");
+
             return `
               <li class="flex justify-between items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg">
                 <span 
@@ -1337,12 +1426,20 @@
                 >
                   ${s.name}
                 </span>
-                <button
-                  onclick="deleteStrategy('${s.name.replace(/'/g, "\\'")}')"
-                  class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-semibold"
-                >
-                  Delete
-                </button>
+                <div class="space-x-2">
+                    <button
+                      onclick="editStrategy('${escapedName}')"
+                      class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200 text-sm font-semibold"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onclick="deleteStrategy('${escapedName}')"
+                      class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-semibold"
+                    >
+                      Delete
+                    </button>
+                </div>
               </li>
             `;
           })
