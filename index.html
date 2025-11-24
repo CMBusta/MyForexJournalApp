@@ -222,13 +222,13 @@
           </div>
           
           <div>
-            <label for="strategy" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Strategy</label>
+            <label for="strategy" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Strategy(s) (Hold Ctrl/Cmd to select multiple)</label>
             <select
               id="strategy"
               required
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              multiple
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 h-24"
             >
-              <option value="">Select a Strategy</option>
               </select>
           </div>
 
@@ -455,19 +455,44 @@
         <h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
           Strategy Management
         </h2>
-        <form id="strategyForm" class="flex space-x-4 mb-4">
-          <input
-            type="text"
-            id="strategyName"
-            placeholder="New Strategy Name (e.g., London Breakout)"
-            required
-            class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-          />
+        <form id="strategyForm" class="grid grid-cols-2 sm:grid-cols-6 gap-4 mb-4 items-end">
+          <div class="col-span-2 sm:col-span-1">
+            <label for="strategyName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Strategy Name</label>
+            <input
+              type="text"
+              id="strategyName"
+              placeholder="e.g., London Breakout"
+              required
+              class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 mt-1"
+            />
+          </div>
+
+          <div>
+            <label for="strategyBgColor" class="block text-sm font-medium text-gray-700 dark:text-gray-300">BG Color</label>
+            <input type="color" id="strategyBgColor" value="#5046e51a" class="w-full h-10 p-0.5 rounded-md border-gray-300 shadow-sm cursor-pointer mt-1" />
+          </div>
+          <div>
+            <label for="strategyFontColor" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Color</label>
+            <input type="color" id="strategyFontColor" value="#4338ca" class="w-full h-10 p-0.5 rounded-md border-gray-300 shadow-sm cursor-pointer mt-1" />
+          </div>
+          <div>
+            <label for="strategyBorderColor" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Border Color</label>
+            <input type="color" id="strategyBorderColor" value="#4338ca" class="w-full h-10 p-0.5 rounded-md border-gray-300 shadow-sm cursor-pointer mt-1" />
+          </div>
+          <div>
+            <label for="strategyFontType" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Type</label>
+            <select id="strategyFontType" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 mt-1 h-10">
+                <option value="inherit">Inherit</option>
+                <option value="serif">Serif</option>
+                <option value="monospace">Monospace</option>
+            </select>
+          </div>
+          
           <button
             type="submit"
-            class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out shadow-md"
+            class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out shadow-md h-10 sm:mt-6"
           >
-            Add Strategy
+            Add
           </button>
         </form>
         <ul
@@ -511,6 +536,7 @@
       const DB_NAME = "ForexJournalDB";
       const STORE_ENTRIES = "entries";
       const STORE_STRATEGIES = "strategies";
+      const STRATEGY_DELIMITER = "+"; // The requested delimiter for multi-strategy storage
 
       let db;
 
@@ -545,7 +571,7 @@
       
       /**
        * Open the SQLite database and initialize the tables with the full CSV structure,
-       * now including preTradeImage.
+       * now including preTradeImage and updated strategy schema.
        */
       async function openDB() {
           try {
@@ -559,7 +585,6 @@
               db = database;
 
               // SQL statements to create tables if they do not exist
-              // *** UPDATED: Added preTradeImage TEXT column ***
               const statements = `
                   CREATE TABLE IF NOT EXISTS ${STORE_ENTRIES} (
                       id INTEGER PRIMARY KEY,
@@ -589,12 +614,16 @@
                   );
                   CREATE TABLE IF NOT EXISTS ${STORE_STRATEGIES} (
                       name TEXT PRIMARY KEY NOT NULL,
-                      description TEXT
+                      description TEXT,
+                      bgColor TEXT,
+                      fontColor TEXT,
+                      borderColor TEXT,
+                      fontType TEXT
                   );
               `;
 
               await Sqlite.execute({ database: db, statements: statements });
-              console.log("SQLite Database initialized with full schema (including preTradeImage).");
+              console.log("SQLite Database initialized with full schema.");
           } catch (err) {
               console.error("SQLite Initialization failed:", err);
               throw err;
@@ -609,7 +638,6 @@
        */
       async function addItem(storeName, item) {
           if (storeName === STORE_ENTRIES) {
-              // *** UPDATED: Added preTradeImage to columns ***
               const columns = [
                   "tradeId", "date", "time", "pair", "direction", "strategy", "timeFrame",
                   "entryPrice", "slPrice", "tpPrice", "exitPrice", "exitReason", "pips",
@@ -623,11 +651,9 @@
                   // Update mode
                   const setClauses = columns.map(col => `${col}=?`).join(', ');
                   const sql = `UPDATE ${STORE_ENTRIES} SET ${setClauses} WHERE id=?`;
-                  
-                  // Append id for the WHERE clause
                   values.push(item.id);
 
-                  const result = await Sqlite.run({ database: db, statement: sql, values: values });
+                  await Sqlite.run({ database: db, statement: sql, values: values });
                   return item.id;
               } else {
                   // Insert mode
@@ -639,9 +665,20 @@
                   return result.changes.lastId;
               }
           } else if (storeName === STORE_STRATEGIES) {
-              // Save a strategy. Name is the primary key.
-              const sql = `INSERT OR REPLACE INTO ${STORE_STRATEGIES} (name, description) VALUES (?, ?)`;
-              await Sqlite.run({ database: db, statement: sql, values: [item.name, item.description || null] });
+              // Save a strategy. Name is the primary key. (Updated columns)
+              const sql = `INSERT OR REPLACE INTO ${STORE_STRATEGIES} (name, description, bgColor, fontColor, borderColor, fontType) VALUES (?, ?, ?, ?, ?, ?)`;
+              await Sqlite.run({ 
+                  database: db, 
+                  statement: sql, 
+                  values: [
+                      item.name, 
+                      item.description || null, 
+                      item.bgColor || null, 
+                      item.fontColor || null, 
+                      item.borderColor || null, 
+                      item.fontType || null
+                  ] 
+              });
               return item.name;
           }
       }
@@ -678,14 +715,15 @@
       // =========================================================================================================================
 
       let journalEntries = [];
-      let tradingStrategies = [];
+      // Use a Map for O(1) strategy lookup by name
+      let tradingStrategiesMap = new Map(); 
       let currencyPairs = [];
 
       const tradeForm = document.getElementById("tradeForm");
       const strategyForm = document.getElementById("strategyForm");
       const entriesList = document.getElementById("entriesList");
       const strategyList = document.getElementById("strategyList");
-      const strategySelect = document.getElementById("strategy");
+      const strategySelect = document.getElementById("strategy"); // Now a multi-select
       const pairSuggestions = document.getElementById("pairSuggestions");
 
       const exportBtn = document.getElementById("exportBtn");
@@ -693,14 +731,20 @@
       const deleteAllBtn = document.getElementById("deleteAllBtn");
       const filterText = document.getElementById("filterText");
 
-      // *** UPDATED: References for pre-trade image fields ***
+      // Strategy Management Inputs
+      const strategyNameInput = document.getElementById("strategyName");
+      const strategyBgColorInput = document.getElementById("strategyBgColor");
+      const strategyFontColorInput = document.getElementById("strategyFontColor");
+      const strategyBorderColorInput = document.getElementById("strategyBorderColor");
+      const strategyFontTypeInput = document.getElementById("strategyFontType");
+
+      // Image fields
       const preTradeImageFile = document.getElementById("preTradeImageFile");
       const preTradeImageDataField = document.getElementById("preTradeImageData");
       const preImagePreview = document.getElementById("preImagePreview");
       const preImagePreviewContainer = document.getElementById("preImagePreviewContainer");
       const clearPreImageBtn = document.getElementById("clearPreImageBtn");
       
-      // Post-trade image references
       const postTradeImageFile = document.getElementById("postTradeImageFile");
       const postTradeImageDataField = document.getElementById("postTradeImageData");
       const postImagePreview = document.getElementById("postImagePreview");
@@ -712,6 +756,42 @@
       // =========================================================================================================================
       // 3. Trade Entry Logic
       // =========================================================================================================================
+      
+      /**
+       * Ensures all individual strategies in a '+' delimited string exist in the DB.
+       * @param {string} strategyString - The '+' delimited string of strategies.
+       */
+      async function ensureAllStrategiesExist(strategyString) {
+          if (!strategyString) return;
+          
+          const individualStrategies = strategyString.split(STRATEGY_DELIMITER)
+              .map(s => s.trim())
+              .filter(s => s.length > 0);
+
+          let strategiesAdded = false;
+
+          for (const name of individualStrategies) {
+              if (!tradingStrategiesMap.has(name)) {
+                  // Create a new strategy with default styling
+                  const newStrategy = {
+                      name: name,
+                      description: 'Auto-created from trade entry/import',
+                      bgColor: '#5046e51a', // Light indigo background (10% opacity of #5046e5)
+                      fontColor: '#4338ca', // Darker indigo font
+                      borderColor: '#4338ca', // Darker indigo border
+                      fontType: 'inherit'
+                  };
+                  
+                  await addItem(STORE_STRATEGIES, newStrategy);
+                  tradingStrategiesMap.set(name, newStrategy);
+                  strategiesAdded = true;
+              }
+          }
+          
+          if (strategiesAdded) {
+              renderStrategies();
+          }
+      }
 
       /**
        * Converts a file (image) to a Base64 string.
@@ -736,12 +816,19 @@
         const entryId = document.getElementById("entryId").value;
         
         try {
-          
-          // Collect all data points from the expanded form
+          // 1. Collect and format data
           const date = document.getElementById("tradeDate").value;
           const time = document.getElementById("tradeTime").value || null;
           const pair = document.getElementById("currencyPair").value.toUpperCase();
-          const strategy = document.getElementById("strategy").value;
+          
+          // Get multiple selected strategies and join them with '+'
+          const selectedStrategies = Array.from(strategySelect.selectedOptions).map(option => option.value.trim());
+          if (selectedStrategies.length === 0) {
+              alert("Please select at least one strategy.");
+              return;
+          }
+          const strategy = selectedStrategies.join(STRATEGY_DELIMITER);
+          
           const direction = document.getElementById("direction").value;
           const timeFrame = document.getElementById("timeFrame").value || null;
           const entryPrice = parseFloat(document.getElementById("entryPrice").value) || null;
@@ -758,7 +845,6 @@
           const lessonsLearned = document.getElementById("lessonsLearned").value.trim() || null;
           const notes = document.getElementById("notes").value.trim() || null;
 
-          // Handle two image fields
           let preTradeImage = preTradeImageDataField.value || null;
           let postTradeImage = postTradeImageDataField.value || null;
 
@@ -771,37 +857,31 @@
           
           const existingTradeId = document.getElementById("tradeId").value;
           
-          // --- FIX FOR TIMESTAMP ERROR START: Safely determine the timestamp ---
+          // 2. Determine timestamp (Fix for the original error)
           let entryTimestamp = Date.now();
           let parsedEntryId;
 
           if (entryId) {
               parsedEntryId = parseInt(entryId);
-              // Safely find the existing entry in the local state
               const existingEntry = journalEntries.find(e => e.id === parsedEntryId);
-              
               if (existingEntry) {
                   entryTimestamp = existingEntry.timestamp;
               } else {
-                  // If not found in local state, we use Date.now() but log a warning.
-                  // The update will still proceed using the existing ID, but the timestamp
-                  // for sorting might be updated.
                   console.warn(`Trade ID ${parsedEntryId} found in form but not in local state. Using current timestamp for update.`);
-                  // Keeping entryTimestamp as Date.now() (its default value).
               }
           }
-          // --- FIX FOR TIMESTAMP ERROR END ---
 
+          // 3. Auto-create strategies (New logic)
+          await ensureAllStrategiesExist(strategy);
 
           const newEntry = {
-            // Use the safely parsed ID
             id: parsedEntryId || undefined,
             tradeId: existingTradeId || generateTradeId(),
             date,
             time,
             pair,
             direction,
-            strategy,
+            strategy, // The '+' delimited string
             timeFrame,
             entryPrice,
             slPrice,
@@ -818,31 +898,26 @@
             notes,
             preTradeImage,
             postTradeImage,
-            // Use the safely determined timestamp
             timestamp: entryTimestamp,
           };
 
-          // The addItem function handles both INSERT and UPDATE based on 'id' presence
+          // 4. Save to DB and update state
           const newId = await addItem(STORE_ENTRIES, newEntry);
           newEntry.id = newId;
 
           if (entryId) {
-            // Update mode: replace the old entry in the state
             const index = journalEntries.findIndex((e) => e.id === newEntry.id);
             if (index > -1) {
               journalEntries[index] = newEntry;
             }
             showToast("Trade updated successfully!");
           } else {
-            // Insert mode: add to the front of the state
             journalEntries.unshift(newEntry);
             showToast("Trade saved successfully!");
           }
 
-          // Update the list of pairs
+          // 5. Cleanup
           updateCurrencyPairs(pair);
-
-          // Reset the form and re-render
           tradeForm.reset();
           resetFormForNewEntry();
           await renderJournalEntries();
@@ -889,7 +964,7 @@
       }
       
       function initImageListeners() {
-          initSingleImageListeners('pre'); // *** NEW: Initialize pre-trade listeners ***
+          initSingleImageListeners('pre');
           initSingleImageListeners('post');
       }
 
@@ -918,6 +993,39 @@
           }
 
           return { text: resultText, class: resultClass };
+      }
+      
+      /**
+       * Renders styled tags for multiple strategies.
+       * @param {string} strategyString - The '+' delimited string of strategies.
+       * @returns {string} HTML string of styled strategy tags.
+       */
+      function renderStrategyTags(strategyString) {
+        if (!strategyString) return '';
+        
+        const individualStrategies = strategyString.split(STRATEGY_DELIMITER)
+            .map(s => s.trim())
+            .filter(s => s.length > 0);
+            
+        return individualStrategies.map(name => {
+            const strategy = tradingStrategiesMap.get(name);
+            if (!strategy) return '';
+            
+            // Apply inline styles for maximum control
+            const style = `
+                background-color: ${strategy.bgColor || '#ccc'};
+                color: ${strategy.fontColor || '#333'};
+                border: 1px solid ${strategy.borderColor || '#333'};
+                font-family: ${strategy.fontType || 'inherit'};
+            `;
+            
+            return `<span 
+                      class="px-2 py-0.5 text-xs font-semibold rounded-full mr-2 mb-1 inline-block whitespace-nowrap"
+                      style="${style}"
+                    >
+                      ${name}
+                    </span>`;
+        }).join('');
       }
 
       /**
@@ -970,7 +1078,11 @@
                     </div>
                   </div>
                   
-                  <p class="text-sm text-indigo-600 dark:text-indigo-400 font-medium mb-1">${entry.strategy} / ${entry.direction}</p>
+                  <div class="flex flex-wrap items-center mb-1">
+                      ${renderStrategyTags(entry.strategy)}
+                      <span class="text-sm text-gray-600 dark:text-gray-400">/ ${entry.direction}</span>
+                  </div>
+                  
                   <p class="text-xs text-gray-500 dark:text-gray-400">${entry.date} ${entry.time ? `- ${entry.time}` : ''} | Exit: ${entry.exitReason || 'N/A'} | Plan: ${entry.didFollowPlan || 'N/A'}</p>
                   
                   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-gray-600 dark:text-gray-400 mt-2">
@@ -1037,7 +1149,6 @@
         document.getElementById("tradeDate").value = entry.date;
         document.getElementById("tradeTime").value = entry.time || '';
         document.getElementById("currencyPair").value = entry.pair;
-        document.getElementById("strategy").value = entry.strategy;
         document.getElementById("direction").value = entry.direction;
         document.getElementById("timeFrame").value = entry.timeFrame || '';
         document.getElementById("entryPrice").value = entry.entryPrice;
@@ -1054,7 +1165,13 @@
         document.getElementById("lessonsLearned").value = entry.lessonsLearned || '';
         document.getElementById("notes").value = entry.notes || '';
 
-        // *** UPDATED: Handle Pre-Trade Image ***
+        // Handle Multi-Select Strategies
+        const selectedNames = entry.strategy.split(STRATEGY_DELIMITER).map(s => s.trim());
+        Array.from(strategySelect.options).forEach(option => {
+            option.selected = selectedNames.includes(option.value);
+        });
+        
+        // Handle Image fields
         preTradeImageFile.value = ""; 
         if (entry.preTradeImage) {
             preTradeImageDataField.value = entry.preTradeImage;
@@ -1066,7 +1183,6 @@
             preImagePreviewContainer.classList.add("hidden");
         }
         
-        // Handle Post-Trade Image
         postTradeImageFile.value = ""; 
         if (entry.postTradeImage) {
           postTradeImageDataField.value = entry.postTradeImage; 
@@ -1118,7 +1234,12 @@
         submitBtn.classList.add("bg-indigo-600");
         cancelEditBtn.classList.add("hidden");
 
-        // *** UPDATED: Reset both image fields ***
+        // Reset multi-select
+        Array.from(strategySelect.options).forEach(option => {
+            option.selected = false;
+        });
+
+        // Reset image fields
         preTradeImageFile.value = "";
         preTradeImageDataField.value = "";
         preImagePreview.src = "";
@@ -1154,22 +1275,40 @@
       strategyForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const nameInput = document.getElementById("strategyName");
-        const name = nameInput.value.trim();
+        const name = strategyNameInput.value.trim();
+        const bgColor = strategyBgColorInput.value;
+        const fontColor = strategyFontColorInput.value;
+        const borderColor = strategyBorderColorInput.value;
+        const fontType = strategyFontTypeInput.value;
 
-        if (name && !tradingStrategies.some((s) => s.name === name)) {
-          const newStrategy = { name: name, description: null };
+        if (name && !tradingStrategiesMap.has(name)) {
+          const newStrategy = { 
+              name, 
+              description: null, 
+              bgColor, 
+              fontColor, 
+              borderColor, 
+              fontType 
+          };
           try {
             await addItem(STORE_STRATEGIES, newStrategy);
-            tradingStrategies.push(newStrategy);
-            tradingStrategies.sort((a, b) => a.name.localeCompare(b.name));
+            tradingStrategiesMap.set(name, newStrategy);
+            
+            // Clear input fields and reset color pickers to default
+            strategyNameInput.value = "";
+            strategyBgColorInput.value = '#5046e51a'; 
+            strategyFontColorInput.value = '#4338ca'; 
+            strategyBorderColorInput.value = '#4338ca';
+            strategyFontTypeInput.value = 'inherit';
+            
             renderStrategies();
-            nameInput.value = "";
-            showToast(`Strategy '${name}' added.`);
+            showToast(`Strategy '${name}' added with custom styles.`);
           } catch (error) {
             console.error("Error adding strategy:", error);
             alert("Error adding strategy: " + error.message);
           }
+        } else if (tradingStrategiesMap.has(name)) {
+            alert(`Strategy "${name}" already exists.`);
         }
       });
 
@@ -1177,12 +1316,27 @@
        * Renders the list of strategies in the management section and updates the select dropdown.
        */
       function renderStrategies() {
+        // Convert map values to array for sorting and rendering
+        const strategiesArray = Array.from(tradingStrategiesMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+
         // 1. Render management list
-        strategyList.innerHTML = tradingStrategies
-          .map(
-            (s) => `
-              <li class="flex justify-between items-center text-gray-700 dark:text-gray-300 p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg">
-                <span>${s.name}</span>
+        strategyList.innerHTML = strategiesArray
+          .map((s) => {
+            const style = `
+                background-color: ${s.bgColor || '#ccc'};
+                color: ${s.fontColor || '#333'};
+                border: 1px solid ${s.borderColor || '#333'};
+                font-family: ${s.fontType || 'inherit'};
+            `;
+
+            return `
+              <li class="flex justify-between items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg">
+                <span 
+                    class="px-2 py-0.5 text-sm font-semibold rounded-full"
+                    style="${style}"
+                >
+                  ${s.name}
+                </span>
                 <button
                   onclick="deleteStrategy('${s.name.replace(/'/g, "\\'")}')"
                   class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-semibold"
@@ -1190,14 +1344,12 @@
                   Delete
                 </button>
               </li>
-            `
-          )
+            `;
+          })
           .join("");
 
-        // 2. Update trade form dropdown
-        strategySelect.innerHTML =
-          '<option value="">Select a Strategy</option>' +
-          tradingStrategies
+        // 2. Update trade form multi-select dropdown
+        strategySelect.innerHTML = strategiesArray
             .map((s) => `<option value="${s.name}">${s.name}</option>`)
             .join("");
       }
@@ -1208,7 +1360,10 @@
        */
       async function deleteStrategy(name) {
         // Check if any entries use this strategy
-        const isUsed = journalEntries.some((e) => e.strategy === name);
+        const isUsed = journalEntries.some((e) => {
+            if (!e.strategy) return false;
+            return e.strategy.split(STRATEGY_DELIMITER).map(s => s.trim()).includes(name);
+        });
 
         if (isUsed) {
           alert(
@@ -1225,7 +1380,7 @@
 
         try {
           await deleteItem(STORE_STRATEGIES, name);
-          tradingStrategies = tradingStrategies.filter((s) => s.name !== name);
+          tradingStrategiesMap.delete(name);
           renderStrategies();
           showToast(`Strategy '${name}' deleted.`);
         } catch (error) {
@@ -1239,20 +1394,61 @@
       // =========================================================================================================================
 
       /**
+       * Generates a default strategy object with styling.
+       * @param {string} name - The strategy name.
+       * @returns {Object}
+       */
+      function createDefaultStrategy(name) {
+          let bgColor = '#5046e51a'; // Default light indigo
+          let fontColor = '#4338ca'; // Default dark indigo
+          let borderColor = '#4338ca'; // Default dark indigo
+          
+          if (name.toLowerCase().includes('breakout')) {
+              bgColor = '#fef3c7'; // Light Yellow
+              fontColor = '#b45309'; // Dark Yellow-Orange
+              borderColor = '#b45309';
+          } else if (name.toLowerCase().includes('reversal')) {
+              bgColor = '#fecaca'; // Light Red
+              fontColor = '#dc2626'; // Dark Red
+              borderColor = '#dc2626';
+          } else if (name.toLowerCase().includes('continuation')) {
+              bgColor = '#d1fae5'; // Light Green
+              fontColor = '#059669'; // Dark Green
+              borderColor = '#059669';
+          }
+
+          return { 
+              name: name, 
+              description: `Default strategy: ${name}`, 
+              bgColor: bgColor, 
+              fontColor: fontColor, 
+              borderColor: borderColor, 
+              fontType: 'inherit'
+          };
+      }
+
+      /**
        * Ensures default strategies are present on first run.
        */
       async function ensureDefaults() {
-        if (tradingStrategies.length === 0) {
-          const defaultStrategies = [
-            { name: "Breakout", description: "Trading on price breaking key levels." },
-            { name: "Reversal", description: "Trading on market turning points." },
-            { name: "Trend Continuation", description: "Trading in the direction of the main trend." },
+        if (tradingStrategiesMap.size === 0) {
+          const defaultStrategyNames = [
+            "Breakout",
+            "Reversal",
+            "Trend Continuation",
           ];
+          
+          let strategiesAdded = false;
 
-          for (const strategy of defaultStrategies) {
-            await addItem(STORE_STRATEGIES, strategy);
+          for (const name of defaultStrategyNames) {
+              if (!tradingStrategiesMap.has(name)) {
+                  const strategy = createDefaultStrategy(name);
+                  await addItem(STORE_STRATEGIES, strategy);
+                  tradingStrategiesMap.set(name, strategy);
+                  strategiesAdded = true;
+              }
           }
-          tradingStrategies = defaultStrategies; // Update state after adding
+          if(strategiesAdded) console.log("Default strategies added.");
         }
       }
 
@@ -1260,7 +1456,8 @@
        * Loads all entries and strategies from the database into state variables.
        */
       async function loadData() {
-        tradingStrategies = await getAll(STORE_STRATEGIES);
+        const strategiesArray = await getAll(STORE_STRATEGIES);
+        tradingStrategiesMap = new Map(strategiesArray.map(s => [s.name, s]));
         journalEntries = await getAll(STORE_ENTRIES);
         updateCurrencyPairs();
       }
@@ -1329,7 +1526,7 @@
             time: entry.time,
             pair: entry.pair,
             direction: entry.direction,
-            strategy: entry.strategy,
+            strategy: entry.strategy, // Exporting the '+' delimited string
             timeFrame: entry.timeFrame,
             entryPrice: entry.entryPrice,
             slPrice: entry.slPrice,
@@ -1344,7 +1541,6 @@
             emotionalState: entry.emotionalState,
             lessonsLearned: entry.lessonsLearned,
             notes: entry.notes,
-            // *** UPDATED: Include both image columns ***
             preTradeImage: entry.preTradeImage || "",
             postTradeImage: entry.postTradeImage || "",
             timestamp: entry.timestamp,
@@ -1391,13 +1587,12 @@
                 const importedEntries = results.data
                   .filter((row) => row.date && row.pair && row.strategy) // Basic validation
                   .map((row) => ({
-                    // We generate a new ID for the SQLite PK but keep the CSV's tradeId
                     tradeId: row.tradeId || generateTradeId(),
                     date: row.date,
                     time: row.time || null,
                     pair: row.pair.toUpperCase(),
                     direction: row.direction || 'Long',
-                    strategy: row.strategy,
+                    strategy: row.strategy, // The '+' delimited string from CSV
                     timeFrame: row.timeFrame || null,
                     entryPrice: parseFloat(row.entryPrice) || null,
                     slPrice: parseFloat(row.slPrice) || null,
@@ -1412,7 +1607,6 @@
                     emotionalState: row.emotionalState || null,
                     lessonsLearned: row.lessonsLearned || null,
                     notes: row.notes || null,
-                    // *** UPDATED: Map both image columns from CSV ***
                     preTradeImage: row.preTradeImage || null, 
                     postTradeImage: row.postTradeImage || null,
                     timestamp: row.timestamp ? parseInt(row.timestamp) : Date.now(),
@@ -1426,23 +1620,20 @@
                 try {
                     let importedCount = 0;
                     for (const entry of importedEntries) {
-                        // For imported data, we always treat them as new entries to get a new internal ID
+                        // 1. Ensure strategies exist, auto-create if needed
+                        await ensureAllStrategiesExist(entry.strategy);
+                        
+                        // 2. Save the entry
                         const newId = await addItem(STORE_ENTRIES, entry);
                         entry.id = newId;
                         journalEntries.push(entry);
                         importedCount++;
-
-                        // Add new strategies on the fly
-                        if (!tradingStrategies.some(s => s.name === entry.strategy)) {
-                            const newStrategy = { name: entry.strategy, description: 'Imported Strategy' };
-                            await addItem(STORE_STRATEGIES, newStrategy);
-                            tradingStrategies.push(newStrategy);
-                        }
                     }
 
-                    // Re-sort and re-render everything
+                    // 3. Re-sort and re-render everything
                     journalEntries.sort((a, b) => b.timestamp - a.timestamp);
-                    tradingStrategies.sort((a, b) => a.name.localeCompare(b.name));
+                    
+                    // Note: Strategies are already updated in the Map and rendered via ensureAllStrategiesExist
 
                     updateCurrencyPairs();
                     renderStrategies();
@@ -1475,8 +1666,7 @@
         try {
           // 1. Clear IndexedDB (to ensure old data is gone)
           await new Promise((resolve, reject) => {
-                // Attempt to open and delete the old IndexedDB database
-                const DB_REQUEST = indexedDB.open("ForexJournalDB"); // Assuming this was the old IndexedDB name
+                const DB_REQUEST = indexedDB.open("ForexJournalDB"); 
                 DB_REQUEST.onsuccess = (event) => {
                     event.target.result.close();
                     const deleteRequest = indexedDB.deleteDatabase("ForexJournalDB");
@@ -1485,7 +1675,6 @@
                         resolve();
                     };
                     deleteRequest.onerror = (e) => {
-                         // This is often a non-critical error, e.g. if the old DB didn't exist
                         console.warn("Could not clear old IndexedDB:", e.target.error);
                         resolve();
                     };
@@ -1511,11 +1700,11 @@
           
           // Reset state
           journalEntries = [];
-          tradingStrategies = [];
+          tradingStrategiesMap.clear();
           await renderJournalEntries();
-          renderStrategies();
           updateCurrencyPairs();
           await ensureDefaults(); // Re-add defaults after clearing
+          renderStrategies(); // Render the new defaults
 
           showToast("All data has been cleared!");
         } catch (error) {
@@ -1571,7 +1760,7 @@
 
           // 6. Set default date to today and initialize listeners
           document.getElementById("tradeDate").valueAsDate = new Date();
-          initImageListeners(); // Initialize image handlers (now handles pre and post)
+          initImageListeners(); // Initialize image handlers
           updateSplash(100, "Ready!");
         } catch (err) {
           console.error("Initialization failed:", err);
