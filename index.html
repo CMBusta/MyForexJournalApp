@@ -735,69 +735,93 @@
 
         const entryId = document.getElementById("entryId").value;
         
-        // Collect all data points from the expanded form
-        const date = document.getElementById("tradeDate").value;
-        const time = document.getElementById("tradeTime").value || null;
-        const pair = document.getElementById("currencyPair").value.toUpperCase();
-        const strategy = document.getElementById("strategy").value;
-        const direction = document.getElementById("direction").value;
-        const timeFrame = document.getElementById("timeFrame").value || null;
-        const entryPrice = parseFloat(document.getElementById("entryPrice").value) || null;
-        const slPrice = parseFloat(document.getElementById("slPrice").value) || null;
-        const tpPrice = parseFloat(document.getElementById("tpPrice").value) || null;
-        const exitPrice = parseFloat(document.getElementById("exitPrice").value) || null;
-        const exitReason = document.getElementById("exitReason").value || null;
-        const pips = parseFloat(document.getElementById("pips").value) || null;
-        const lotSize = parseFloat(document.getElementById("lotSize").value) || null;
-        const rMultiple = parseFloat(document.getElementById("rMultiple").value) || null;
-        const setupGrade = document.getElementById("setupGrade").value || null;
-        const didFollowPlan = document.getElementById("didFollowPlan").value || null;
-        const emotionalState = document.getElementById("emotionalState").value.trim() || null;
-        const lessonsLearned = document.getElementById("lessonsLearned").value.trim() || null;
-        const notes = document.getElementById("notes").value.trim() || null;
-
-        // *** UPDATED: Handle two image fields ***
-        let preTradeImage = preTradeImageDataField.value || null;
-        let postTradeImage = postTradeImageDataField.value || null;
-
-        if (preTradeImageFile.files.length > 0) {
-          preTradeImage = await fileToBase64(preTradeImageFile.files[0]);
-        }
-        if (postTradeImageFile.files.length > 0) {
-          postTradeImage = await fileToBase64(postTradeImageFile.files[0]);
-        }
-        
-        const existingTradeId = document.getElementById("tradeId").value;
-        
-        const newEntry = {
-          // If editing, use the existing ID (SQLite will UPDATE)
-          id: entryId ? parseInt(entryId) : undefined,
-          tradeId: existingTradeId || generateTradeId(),
-          date,
-          time,
-          pair,
-          direction,
-          strategy,
-          timeFrame,
-          entryPrice,
-          slPrice,
-          tpPrice,
-          exitPrice,
-          exitReason,
-          pips,
-          lotSize,
-          rMultiple,
-          setupGrade,
-          didFollowPlan,
-          emotionalState,
-          lessonsLearned,
-          notes,
-          preTradeImage, // *** NEW FIELD ***
-          postTradeImage,
-          timestamp: entryId ? journalEntries.find(e => e.id === parseInt(entryId)).timestamp : Date.now(),
-        };
-
         try {
+          
+          // Collect all data points from the expanded form
+          const date = document.getElementById("tradeDate").value;
+          const time = document.getElementById("tradeTime").value || null;
+          const pair = document.getElementById("currencyPair").value.toUpperCase();
+          const strategy = document.getElementById("strategy").value;
+          const direction = document.getElementById("direction").value;
+          const timeFrame = document.getElementById("timeFrame").value || null;
+          const entryPrice = parseFloat(document.getElementById("entryPrice").value) || null;
+          const slPrice = parseFloat(document.getElementById("slPrice").value) || null;
+          const tpPrice = parseFloat(document.getElementById("tpPrice").value) || null;
+          const exitPrice = parseFloat(document.getElementById("exitPrice").value) || null;
+          const exitReason = document.getElementById("exitReason").value || null;
+          const pips = parseFloat(document.getElementById("pips").value) || null;
+          const lotSize = parseFloat(document.getElementById("lotSize").value) || null;
+          const rMultiple = parseFloat(document.getElementById("rMultiple").value) || null;
+          const setupGrade = document.getElementById("setupGrade").value || null;
+          const didFollowPlan = document.getElementById("didFollowPlan").value || null;
+          const emotionalState = document.getElementById("emotionalState").value.trim() || null;
+          const lessonsLearned = document.getElementById("lessonsLearned").value.trim() || null;
+          const notes = document.getElementById("notes").value.trim() || null;
+
+          // Handle two image fields
+          let preTradeImage = preTradeImageDataField.value || null;
+          let postTradeImage = postTradeImageDataField.value || null;
+
+          if (preTradeImageFile.files.length > 0) {
+            preTradeImage = await fileToBase64(preTradeImageFile.files[0]);
+          }
+          if (postTradeImageFile.files.length > 0) {
+            postTradeImage = await fileToBase64(postTradeImageFile.files[0]);
+          }
+          
+          const existingTradeId = document.getElementById("tradeId").value;
+          
+          // --- FIX FOR TIMESTAMP ERROR START: Safely determine the timestamp ---
+          let entryTimestamp = Date.now();
+          let parsedEntryId;
+
+          if (entryId) {
+              parsedEntryId = parseInt(entryId);
+              // Safely find the existing entry in the local state
+              const existingEntry = journalEntries.find(e => e.id === parsedEntryId);
+              
+              if (existingEntry) {
+                  entryTimestamp = existingEntry.timestamp;
+              } else {
+                  // If not found in local state, we use Date.now() but log a warning.
+                  // The update will still proceed using the existing ID, but the timestamp
+                  // for sorting might be updated.
+                  console.warn(`Trade ID ${parsedEntryId} found in form but not in local state. Using current timestamp for update.`);
+                  // Keeping entryTimestamp as Date.now() (its default value).
+              }
+          }
+          // --- FIX FOR TIMESTAMP ERROR END ---
+
+
+          const newEntry = {
+            // Use the safely parsed ID
+            id: parsedEntryId || undefined,
+            tradeId: existingTradeId || generateTradeId(),
+            date,
+            time,
+            pair,
+            direction,
+            strategy,
+            timeFrame,
+            entryPrice,
+            slPrice,
+            tpPrice,
+            exitPrice,
+            exitReason,
+            pips,
+            lotSize,
+            rMultiple,
+            setupGrade,
+            didFollowPlan,
+            emotionalState,
+            lessonsLearned,
+            notes,
+            preTradeImage,
+            postTradeImage,
+            // Use the safely determined timestamp
+            timestamp: entryTimestamp,
+          };
+
           // The addItem function handles both INSERT and UPDATE based on 'id' presence
           const newId = await addItem(STORE_ENTRIES, newEntry);
           newEntry.id = newId;
@@ -822,9 +846,10 @@
           tradeForm.reset();
           resetFormForNewEntry();
           await renderJournalEntries();
-        } catch (error) {
+          
+        } catch (error) { 
           console.error("Error saving/updating entry:", error);
-          alert("Error saving trade: " + error.message);
+          alert("Error saving trade: " + (error.message || error.name || error));
         }
       });
 
