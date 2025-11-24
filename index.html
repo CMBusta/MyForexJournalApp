@@ -59,126 +59,12 @@
         }
       }
 
-<<<<<<< HEAD
       /* Splash Screen Styles */
       #splash-screen {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-=======
-      @media (min-width: 1024px) {
-        html {
-          font-size: 1.1rem;
-        }
-
-        .form-section,
-        .journal-list-section {
-          width: 50% !important;
-        }
-      }
-    </style>
-    <style>
-      @media (max-width: 767px) {
-        html {
-          font-size: 0.95rem;
-        }
-
-        body {
-          padding: 1rem !important;
-        }
-
-        .container {
-          flex-direction: column !important;
-          gap: 1rem !important;
-        }
-
-        .form-section,
-        .journal-list-section {
-          width: 100% !important;
-          padding: 1rem !important;
-        }
-
-        button {
-          padding-top: 0.6rem !important;
-          padding-bottom: 0.6rem !important;
-          padding-left: 0.9rem !important;
-          padding-right: 0.9rem !important;
-          font-size: 0.9rem !important;
-        }
-
-        input,
-        select,
-        textarea {
-          font-size: 0.9rem !important;
-          padding: 0.6rem 0.75rem !important;
-        }
-
-        .scrollable-list {
-          max-height: 75vh !important;
-        }
-
-        #messageModal > div,
-        #strategiesModal > div,
-        #rawDataModal > div,
-        #strategyDbModal > div {
-          max-width: 95% !important;
-          margin: 0 0.5rem !important;
-          padding: 1rem !important;
-        }
-
-        h1,
-        h2,
-        h3 {
-          font-size: 1.1rem !important;
-        }
-      }
-    </style>
-    <style>
-      .journal-list-section {
-        width: 100% !important;
-      }
-
-      #addEntryModalContent {
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-    </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-      tailwind.config = { darkMode: "class" };
-    </script>
-    <script defer src="./papaparse.min.js"></script>
-    <style>
-      .entry-strategies {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.25rem;
-        justify-content: flex-end;
-        align-items: flex-start;
-        max-width: 100%;
-        overflow: visible;
-      }
-      .entry-images {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 0.5rem;
-      }
-
-      #strategyColorPicker::-webkit-color-swatch-wrapper {
-        padding: 0;
-      }
-      #strategyColorPicker::-webkit-color-swatch {
-        border: none;
-        border-radius: 50%;
-      }
-    </style>
-    <style>
-      html,
-      body {
->>>>>>> a0823573854bb126707a7d2b60927a607b5f1138
         height: 100%;
         background-color: #f3f4f6; /* Light background */
         display: flex;
@@ -251,806 +137,12 @@
         Loading...
       </p>
     </div>
-<<<<<<< HEAD
     <div class="container mx-auto p-4 sm:p-6 lg:p-8">
       <header class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
           Forex Trading Journal
         </h1>
         <div class="flex space-x-2 mt-4 sm:mt-0">
-=======
-
-    <div class="mt-4 space-y-2">
-      <button
-        class="w-full py-2 px-4 bg-violet-600 text-white font-semibold rounded-lg shadow-md hover:bg-violet-700 transition duration-300 flex items-center justify-center space-x-2"
-        id="strategiesBtn"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="currentColor"
-          viewbox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            clip-rule="evenodd"
-            d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM6.75 9.25a.75.75 0 0 0 0 1.5h6.5a.75.75 0 0 0 0-1.5h-6.5Z"
-            fill-rule="evenodd"
-          ></path>
-        </svg>
-        <span class="md:inline">Strategies</span>
-      </button>
-      <input accept=".csv" class="hidden" id="csvFileInput" type="file" />
-      <button
-        class="w-full py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition duration-300 flex items-center justify-center space-x-2"
-        id="importCsvBtn"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="currentColor"
-          viewbox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            clip-rule="evenodd"
-            d="M10 2a.75.75 0 0 1 .75.75v10.63l2.47-2.47a.75.75 0 1 1 1.06 1.06l-3.75 3.75a.75.75 0 0 1-1.06 0l-3.75-3.75a.75.75 0 1 1 1.06-1.06l2.47 2.47V2.75A.75.75 0 0 1 10 2Z"
-            fill-rule="evenodd"
-          ></path>
-        </svg>
-        <span class="md:inline">Import (CSV)</span>
-      </button>
-      <!-- ✅ Hidden CSV file input with broader MIME types for Android compatibility -->
-      <input
-        accept=".csv,text/csv,text/plain,text/comma-separated-values,application/vnd.ms-excel"
-        id="csvFileInput"
-        style="display: none"
-        type="file"
-      />
-      <script>
-        let currentEntries = [];
-        let currentStrategies = [];
-
-        window.showMessageModal =
-          window.showMessageModal ||
-          function (msg, type) {
-            alert(`${type ? type.toUpperCase() + ": " : ""}${msg}`);
-          };
-
-        const importBtn = document.getElementById("importCsvBtn");
-        const csvInput = document.getElementById("csvFileInput");
-
-        if (importBtn && csvInput) {
-          importBtn.addEventListener("click", () => csvInput.click());
-
-          csvInput.addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            console.log("Selected file:", file.name);
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              const csvContent = e.target.result;
-              console.log("CSV content loaded.");
-              // 🔧 Add your CSV import logic here
-            };
-            reader.readAsText(file);
-          });
-        }
-      </script>
-
-      <button
-        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300 hidden"
-        id="backupCsvBtn"
-      >
-        Backup (CSV)
-      </button>
-      <button
-        class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300 hidden"
-        id="restoreCsvBtn"
-      >
-        Restore (CSV)
-      </button>
-      <button
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300"
-        id="backupJsonBtn"
-      >
-        Backup (JSON)
-      </button>
-      <button
-        class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300"
-        id="restoreJsonBtn"
-      >
-        Restore (JSON)
-      </button>
-      <input
-        type="file"
-        id="jsonFileInput"
-        accept="application/json"
-        style="display: none"
-      />
-
-      <button
-        class="w-full py-2 px-4 bg-gray-700 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 transition duration-300 flex items-center justify-center space-x-2 dark:bg-gray-600 dark:hover:bg-gray-700"
-        id="showDbDataBtn"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="currentColor"
-          viewbox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            clip-rule="evenodd"
-            d="M3.5 2.75A.75.75 0 0 0 2.75 3.5v13a.75.75 0 0 0 .75.75h13a.75.75 0 0 0 .75-.75v-13a.75.75 0 0 0-.75-.75h-13ZM15 4.5H5v11h10V4.5Z"
-            fill-rule="evenodd"
-          ></path>
-          <path
-            d="M5.5 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5ZM5.5 11a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5Z"
-          ></path>
-        </svg>
-        <span class="md:inline">Show Raw Data</span>
-      </button>
-      <!-- <button
-        class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center space-x-2"
-        id="strategyDbBtn"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="currentColor"
-          viewbox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 5h2v5H9V5zm0 6h2v2H9v-2z"
-          ></path>
-        </svg>
-        <span class="md:inline">Manage Strategies (DB)</span>
-      </button> -->
-      <button
-        class="w-full py-2 px-4 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300 hidden"
-        id="exportCsvBtn"
-      >
-        Export CSV (hidden by default)
-      </button>
-      <button
-        class="fixed top-4 right-4 p-3 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-yellow-400 shadow-lg z-30 transition duration-300 hover:scale-105"
-        id="darkModeToggle"
-      >
-        <span class="dark:hidden">🌙</span>
-        <span class="hidden dark:inline">☀️</span>
-      </button>
-      <div
-        class="container mx-auto p-4 md:p-6 rounded-2xl shadow-xl flex flex-col md:flex-row gap-4 md:gap-8 bg-white dark:bg-gray-900 max-w-7xl"
-      >
-        <div class="flex justify-center items-center w-full">
-          <div
-            class="w-full md:w-1/3 p-6 rounded-xl shadow-lg bg-gray-50 dark:bg-gray-800 form-section center"
-          >
-            <div class="flex items-center justify-center gap-3 mb-6">
-              <img
-                alt="Forex Journal Logo"
-                class="w-14 h-14 rounded-lg shadow-md"
-                src="icon.png"
-              /><span
-                class="text-3xl font-bold text-indigo-700 dark:text-violet-600"
-                >Forex Journal</span
-              >
-            </div>
-            <!-- Add Entry Modal (inserted) -->
-            <div
-              class="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center hidden z-50 transition-opacity duration-300 opacity-0"
-              id="addEntryModal"
-            >
-              <div
-                class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-3xl w-full mx-4 transform transition-transform duration-300 scale-95"
-                id="addEntryModalContent"
-              >
-                <div class="flex justify-between items-center mb-4">
-                  <h2
-                    class="text-2xl font-bold text-indigo-700 dark:text-violet-600"
-                  >
-                    Add Journal Entry
-                  </h2>
-                  <button
-                    class="text-gray-600 dark:text-gray-200 hover:text-gray-900"
-                    id="closeAddEntryModalBtn"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <form class="space-y-4" id="journalForm">
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="date"
-                      >Date</label
-                    >
-                    <input
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="date"
-                      name="date"
-                      required=""
-                      type="date"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="time"
-                      >Time (Entry)</label
-                    >
-                    <input
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="time"
-                      name="time"
-                      placeholder="HH:MM or HHMM (e.g., 0445)"
-                      required=""
-                      type="text"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="pair"
-                      >Pair</label
-                    >
-                    <select
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="pair"
-                      name="pair"
-                    >
-                      <option value="GBP/USD">GBP/USD</option>
-                      <option value="EUR/USD">EUR/USD</option>
-                      <option value="USD/JPY">USD/JPY</option>
-                      <option value="AUD/USD">AUD/USD</option>
-                      <option value="USD/CAD">USD/CAD</option>
-                    </select>
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="direction"
-                      >Direction</label
-                    >
-                    <select
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="direction"
-                      name="direction"
-                    >
-                      <option value="Buy">Buy</option>
-                      <option value="Sell">Sell</option>
-                    </select>
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="strategyInput"
-                      >Strategy</label
-                    >
-                    <div
-                      class="p-3 rounded-lg bg-gray-200 dark:bg-gray-700 grid grid-cols-2 gap-2 md:grid-cols-3"
-                      id="indicatorsContainer"
-                    ></div>
-                    <input
-                      class="mt-2 w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      id="strategy"
-                      name="strategy"
-                      placeholder="Select a strategy above"
-                      readonly=""
-                      type="text"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="timeFrame"
-                      >Time Frame</label
-                    >
-                    <select
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="timeFrame"
-                      name="timeFrame"
-                    >
-                      <option value="M1">M1</option>
-                      <option value="M5">M5</option>
-                      <option value="M15">M15</option>
-                      <option value="M30">M30</option>
-                      <option value="H1">H1</option>
-                      <option value="H4">H4</option>
-                      <option value="D1">D1</option>
-                      <option value="W1">W1</option>
-                      <option value="MN">MN</option>
-                    </select>
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="entryPrice"
-                      >Entry Price</label
-                    >
-                    <input
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="entryPrice"
-                      name="entryPrice"
-                      step="0.00001"
-                      type="number"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="slPrice"
-                      >SL Price</label
-                    >
-                    <input
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="slPrice"
-                      name="slPrice"
-                      step="0.00001"
-                      type="number"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="tpPrice"
-                      >TP Price</label
-                    >
-                    <input
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="tpPrice"
-                      name="tpPrice"
-                      step="0.00001"
-                      type="number"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="exitPrice"
-                      >Exit Price</label
-                    >
-                    <input
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="exitPrice"
-                      name="exitPrice"
-                      step="0.00001"
-                      type="number"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="exitReason"
-                      >Exit Reason</label
-                    >
-                    <select
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="exitReason"
-                      name="exitReason"
-                    >
-                      <option value="TP">TP</option>
-                      <option value="SL">SL</option>
-                      <option value="Exited Early">Exited Early</option>
-                      <option value="Break-Even">Break-Even</option>
-                    </select>
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="lotSize"
-                      >Lot Size</label
-                    >
-                    <input
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="lotSize"
-                      name="lotSize"
-                      step="0.01"
-                      type="number"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="setupGrade"
-                      >Setup Grade</label
-                    >
-                    <select
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="setupGrade"
-                      name="setupGrade"
-                    >
-                      <option value="A">A</option>
-                      <option value="B">B</option>
-                      <option value="C">C</option>
-                      <option value="D">D</option>
-                      <option value="F">F</option>
-                    </select>
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="didFollowPlan"
-                      >Did I Follow My Plan?</label
-                    >
-                    <select
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="didFollowPlan"
-                      name="didFollowPlan"
-                    >
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                      <option value="Some">Some</option>
-                    </select>
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="emotionalState"
-                      >Emotional State</label
-                    >
-                    <select
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="emotionalState"
-                      name="emotionalState"
-                    >
-                      <option value="Calm">Calm</option>
-                      <option value="Doubtful">Doubtful</option>
-                      <option value="Slightly Confident">
-                        Slightly Confident
-                      </option>
-                      <option value="Confident">Confident</option>
-                      <option value="Stressed">Stressed</option>
-                      <option value="Excited">Excited</option>
-                      <option value="Greedy">Greedy</option>
-                      <option value="Fearful">Fearful</option>
-                    </select>
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="preTradeImage"
-                      >Pre-Trade Screenshot (&lt;1MB)</label
-                    >
-                    <input
-                      accept="image/*"
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="preTradeImage"
-                      name="preTradeImage"
-                      type="file"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="postTradeImage"
-                      >Post-Trade Screenshot (&lt;1MB)</label
-                    >
-                    <input
-                      accept="image/*"
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="postTradeImage"
-                      name="postTradeImage"
-                      type="file"
-                    />
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="lessonsLearned"
-                      >Lessons Learned</label
-                    >
-                    <textarea
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"
-                      id="lessonsLearned"
-                      name="lessonsLearned"
-                      rows="3"
-                    ></textarea>
-                  </div>
-                  <div class="flex flex-col">
-                    <label
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                      for="notes"
-                      >Notes</label
-                    >
-                    <textarea
-                      class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus;border-indigo-500"
-                      id="notes"
-                      name="notes"
-                      rows="3"
-                    ></textarea>
-                  </div>
-                  <button
-                    class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2"
-                    id="submitBtn"
-                    type="submit"
-                  >
-                    <svg
-                      class="w-5 h-5"
-                      fill="currentColor"
-                      id="submitBtnIcon"
-                      viewbox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7.74 3.425a.75.75 0 0 1 .424-.047l7.74 1.72a.75.75 0 0 1 .596.74v.928a1.5 1.5 0 0 1-.806 1.34L14.473 9.42a2.5 2.5 0 0 0-1.282 2.228v.57a.75.75 0 0 1-.364.646L9.67 15.602a3.033 3.033 0 0 1-2.924 0l-3.217-2.31a.75.75 0 0 1-.364-.647v-.57a2.5 2.5 0 0 0-1.282-2.228L.89 7.493a1.5 1.5 0 0 1-.805-1.34V5.118a.75.75 0 0 1 .596-.74l7.74-1.72a.75.75 0 0 1 .424.047Z"
-                      ></path>
-                    </svg>
-                    <span class="md:inline">Add Journal Entry</span>
-                  </button>
-                </form>
-                <div class="mt-4 flex justify-end">
-                  <button
-                    class="py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition duration-300 mr-2"
-                    id="closeAddEntryModalFooterBtn"
-                  >
-                    Close
-                  </button>
-                  <!-- Keep the original submit button inside the form; footer Close only hides modal -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="w-full md:w-2/3 p-6 rounded-xl shadow-lg bg-gray-50 dark:bg-gray-800 journal-list-section"
-      >
-        <h2
-          class="text-2xl font-bold text-center text-indigo-700 dark:text-violet-600 mb-6"
-        >
-          Journal Entries
-        </h2>
-        <div
-          class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 shadow-inner"
-          id="metricsDashboard"
-        ></div>
-        <!-- === Strategy Usage List === -->
-        <div
-          class="space-y-2 p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 shadow-inner mt-6"
-          id="strategyUsageList"
-        >
-          <h3
-            class="text-lg font-bold text-indigo-700 dark:text-violet-600 mb-2"
-          >
-            Strategy Usage Count
-          </h3>
-          <div
-            class="grid grid-cols-2 sm:grid-cols-3 gap-3"
-            id="strategyUsageContent"
-          >
-            <!-- Strategy count items will be rendered here -->
-          </div>
-        </div>
-        <div
-          class="space-y-4 mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 shadow-inner"
-        >
-          <div class="flex flex-col">
-            <div class="mb-4">
-              <input
-                class="w-full p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark;border-gray-600 focus:ring-indigo-500 focus;border-indigo-500"
-                id="filterInput"
-                placeholder="Filter by Pair, Strategy, or Trade ID..."
-                type="text"
-              />
-            </div>
-            <!-- Date Range Filter -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div class="flex flex-col">
-                <label
-                  class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  for="startDate"
-                  >From Date &amp; Time</label
-                >
-                <input
-                  class="p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600"
-                  id="startDate"
-                  type="datetime-local"
-                />
-              </div>
-              <div class="flex flex-col">
-                <label
-                  class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  for="endDate"
-                  >To Date &amp; Time</label
-                >
-                <input
-                  class="p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600"
-                  id="endDate"
-                  type="datetime-local"
-                />
-              </div>
-            </div>
-          </div>
-          <!-- Pair Filter -->
-          <div class="flex flex-col">
-            <label
-              class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
-              for="pairFilter"
-              >Pair</label
-            >
-            <select
-              class="p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600"
-              id="pairFilter"
-            >
-              <option value="All">All</option>
-              <option value="EUR/USD">EUR/USD</option>
-              <option value="GBP/USD">GBP/USD</option>
-              <option value="USD/JPY">USD/JPY</option>
-              <option value="AUD/USD">AUD/USD</option>
-              <option value="USD/CAD">USD/CAD</option>
-              <option value="NZD/USD">NZD/USD</option>
-              <option value="USD/CHF">USD/CHF</option>
-              <option value="XAU/USD">XAU/USD</option>
-            </select>
-          </div>
-          <label
-            class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >Trade Outcome</label
-          >
-          <div class="flex space-x-4 justify-between md:justify-start">
-            <label class="inline-flex items-center"
-              ><input
-                checked=""
-                class="form-radio text-indigo-600 h-4 w-4"
-                name="tradeOutcomeFilter"
-                type="radio"
-                value="All"
-              /><span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                >All</span
-              ></label
-            >
-            <label class="inline-flex items-center"
-              ><input
-                class="form-radio text-green-600 h-4 w-4"
-                name="tradeOutcomeFilter"
-                type="radio"
-                value="Win"
-              /><span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                >Winners</span
-              ></label
-            >
-            <label class="inline-flex items-center"
-              ><input
-                class="form-radio text-red-600 h-4 w-4"
-                name="tradeOutcomeFilter"
-                type="radio"
-                value="Loss"
-              /><span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                >Losers</span
-              ></label
-            >
-            <label class="inline-flex items-center"
-              ><input
-                class="form-radio text-yellow-600 h-4 w-4"
-                name="tradeOutcomeFilter"
-                type="radio"
-                value="Break-Even"
-              /><span class="ml-2 text-sm text-gray-700 dark:text-gray-300"
-                >B/E</span
-              ></label
-            >
-          </div>
-
-          <div
-            class="text-center text-gray-500 dark:text-gray-400 hidden"
-            id="loading"
-          >
-            Loading...
-          </div>
-
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 scrollable-list"
-            id="journalList"
-          ></div>
-          <div
-            class="hidden text-center text-gray-500 dark:text-gray-400 mt-4"
-            id="noEntries"
-          >
-            No journal entries yet. Add your first one!
-          </div>
-        </div>
-        <div
-          class="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center hidden z-50"
-          id="messageModal"
-        >
-          <div
-            class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-sm mx-auto"
-          >
-            <p
-              class="text-center text-gray-700 dark:text-gray-300 mb-4"
-              id="modalMessage"
-            ></p>
-            <button
-              class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition"
-              id="modalCloseBtn"
-            >
-              OK
-            </button>
-          </div>
-        </div>
-        <div
-          class="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center hidden z-50"
-          id="strategiesModal"
-        >
-          <div
-            class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full mx-4"
-          >
-            <h2
-              class="text-2xl font-bold text-center text-violet-700 dark:text-violet-600 mb-4"
-            >
-              Manage Strategies
-            </h2>
-            <form class="space-y-4 mb-6" id="strategyForm">
-              <div class="flex flex-col">
-                <label
-                  class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                  for="strategyName"
-                  >Strategy Name</label
-                >
-                <input
-                  class="mt-1 p-2 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-violet-500 focus:border-violet-500"
-                  id="strategyName"
-                  name="strategyName"
-                  required=""
-                  type="text"
-                />
-              </div>
-              <div
-                class="space-y-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-100 dark:bg-gray-900"
-              >
-                <h3
-                  class="text-md font-semibold text-gray-700 dark:text-gray-300"
-                >
-                  Pick Strategy Color
-                </h3>
-                <label
-                  for="strategyColorPicker"
-                  class="text-sm font-medium text-gray-700"
-                >
-                  Color
-                </label>
-                <input
-                  type="color"
-                  id="strategyColorPicker"
-                  value="#4f46e5"
-                  class="w-16 h-16 rounded-full border border-gray-300 shadow-inner cursor-pointer bg-transparent"
-                  style="
-                    appearance: none;
-                    -webkit-appearance: none;
-                    padding: 0;
-                    border: none;
-                    background: none;
-                  "
-                />
-              </div>
-              <button
-                class="w-full py-2 px-4 bg-violet-600 text-white font-semibold rounded-lg shadow-md hover:bg-violet-700 transition duration-300"
-                id="addStrategyBtn"
-                type="submit"
-              >
-                Add Strategy
-              </button>
-            </form>
-            <div
-              class="space-y-2 mt-4 max-h-60 overflow-y-auto"
-              id="strategiesList"
-            ></div>
-            <div class="flex justify-end mt-4">
-              <button
-                class="py-2 px-4 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition duration-300"
-                id="closeStrategiesModalBtn"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-50"
-          id="imageModal"
-        >
->>>>>>> a0823573854bb126707a7d2b60927a607b5f1138
           <button
             id="exportBtn"
             class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out shadow-md"
@@ -1078,13 +170,9 @@
         <h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
           Add New Trade Entry
         </h2>
-        <form id="tradeForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <form id="tradeForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <label
-              for="tradeDate"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Date</label
-            >
+            <label for="tradeDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
             <input
               type="date"
               id="tradeDate"
@@ -1094,11 +182,16 @@
           </div>
 
           <div>
-            <label
-              for="currencyPair"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Currency Pair</label
-            >
+            <label for="tradeTime" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Time (HH:MM)</label>
+            <input
+              type="time"
+              id="tradeTime"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            />
+          </div>
+
+          <div>
+            <label for="currencyPair" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Currency Pair</label>
             <input
               type="text"
               id="currencyPair"
@@ -1111,11 +204,25 @@
           </div>
 
           <div>
-            <label
-              for="strategy"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Strategy</label
+            <label for="timeFrame" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Time Frame</label>
+            <select
+              id="timeFrame"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
             >
+              <option value="">Select</option>
+              <option value="M1">M1</option>
+              <option value="M5">M5</option>
+              <option value="M15">M15</option>
+              <option value="M30">M30</option>
+              <option value="H1">H1</option>
+              <option value="H4">H4</option>
+              <option value="D1">D1</option>
+              <option value="W1">W1</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="strategy" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Strategy</label>
             <select
               id="strategy"
               required
@@ -1126,11 +233,7 @@
           </div>
 
           <div>
-            <label
-              for="direction"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Direction</label
-            >
+            <label for="direction" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Direction</label>
             <select
               id="direction"
               required
@@ -1142,45 +245,139 @@
           </div>
 
           <div>
-            <label
-              for="result"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Result</label
-            >
-            <select
-              id="result"
-              required
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-            >
-              <option value="Win">Win</option>
-              <option value="Loss">Loss</option>
-              <option value="Break Even">Break Even</option>
-            </select>
-          </div>
-
-          <div>
-            <label
-              for="pips"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Pips Gained/Lost (Optional)</label
-            >
+            <label for="pips" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pips Gained/Lost</label>
             <input
               type="number"
               id="pips"
               step="0.1"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            />
+          </div>
+          
+          <div>
+            <label for="rMultiple" class="block text-sm font-medium text-gray-700 dark:text-gray-300">R-Multiple</label>
+            <input
+              type="number"
+              id="rMultiple"
+              step="0.01"
+              required
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
             />
           </div>
 
-          <div class="md:col-span-2 lg:col-span-3">
+          <div>
+            <label for="entryPrice" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Entry Price</label>
+            <input
+              type="number"
+              id="entryPrice"
+              step="0.00001"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            />
+          </div>
+
+          <div>
+            <label for="slPrice" class="block text-sm font-medium text-gray-700 dark:text-gray-300">SL Price</label>
+            <input
+              type="number"
+              id="slPrice"
+              step="0.00001"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            />
+          </div>
+
+          <div>
+            <label for="tpPrice" class="block text-sm font-medium text-gray-700 dark:text-gray-300">TP Price</label>
+            <input
+              type="number"
+              id="tpPrice"
+              step="0.00001"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            />
+          </div>
+
+          <div>
+            <label for="exitPrice" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Exit Price</label>
+            <input
+              type="number"
+              id="exitPrice"
+              step="0.00001"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            />
+          </div>
+          
+          <div>
+            <label for="exitReason" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Exit Reason</label>
+            <select
+              id="exitReason"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            >
+              <option value="">Select Reason</option>
+              <option value="SL">Stop Loss (SL)</option>
+              <option value="TP">Take Profit (TP)</option>
+              <option value="Manual">Manual Exit</option>
+              <option value="Break Even">Break Even (BE)</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="lotSize" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lot Size</label>
+            <input
+              type="number"
+              id="lotSize"
+              step="0.01"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            />
+          </div>
+          
+          <div>
+            <label for="setupGrade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Setup Grade</label>
+            <select
+              id="setupGrade"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            >
+              <option value="">Select Grade</option>
+              <option value="A">A - Excellent</option>
+              <option value="B">B - Good</option>
+              <option value="C">C - Average</option>
+              <option value="D">D - Poor</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="didFollowPlan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Did Follow Plan</label>
+            <select
+              id="didFollowPlan"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            >
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="Some">Some</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="emotionalState" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Emotional State</label>
+            <input
+              type="text"
+              id="emotionalState"
+              placeholder="e.g., Calm, Fearful, Doubtful"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            />
+          </div>
+
+          <div class="lg:col-span-2">
             <label
-              for="imageFile"
+              for="postTradeImageFile"
               class="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >Trade Screenshot (Optional)</label
             >
             <input
               type="file"
-              id="imageFile"
+              id="postTradeImageFile"
               accept="image/*"
               class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-gray-700 dark:file:text-indigo-400 dark:file:hover:bg-gray-600"
             />
@@ -1188,15 +385,20 @@
               <img id="imagePreview" class="w-24 h-24 object-cover rounded-md" alt="Trade Screenshot Preview" />
               <button type="button" id="clearImageBtn" class="mt-1 text-xs text-red-500 hover:text-red-700">Remove Image</button>
             </div>
-            <input type="hidden" id="imageData" />
+            <input type="hidden" id="postTradeImageData" />
           </div>
 
-          <div class="md:col-span-2 lg:col-span-3">
-            <label
-              for="notes"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Notes (Optional)</label
-            >
+          <div class="lg:col-span-2">
+            <label for="lessonsLearned" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lessons Learned (Optional)</label>
+            <textarea
+              id="lessonsLearned"
+              rows="3"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            ></textarea>
+          </div>
+          
+          <div class="lg:col-span-4">
+            <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Notes (Optional)</label>
             <textarea
               id="notes"
               rows="3"
@@ -1205,8 +407,9 @@
           </div>
 
           <input type="hidden" id="entryId" />
+          <input type="hidden" id="tradeId" />
 
-          <div class="md:col-span-2 lg:col-span-3 pt-4 flex space-x-4">
+          <div class="lg:col-span-4 pt-4 flex space-x-4">
             <button
               type="submit"
               class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 ease-in-out shadow-lg"
@@ -1277,2041 +480,6 @@
       >
         Trade saved successfully!
       </div>
-<<<<<<< HEAD
-=======
-      <!-- Chart.js and Data Labels Plugin -->
-      <script>
-        let dbInstance = null;
-
-        /* === Consolidated fixed app JS (preserves original GUI structure) === */
-
-        (function () {
-          // DOM refs used in original HTML
-          const journalForm = document.getElementById("journalForm");
-          const journalList = document.getElementById("journalList");
-          const loadingDiv = document.getElementById("loading");
-          const noEntriesDiv = document.getElementById("noEntries");
-          const submitBtn = document.getElementById("submitBtn");
-          const submitBtnIcon = document.getElementById("submitBtnIcon");
-          const strategiesBtn = document.getElementById("strategiesBtn");
-          const strategiesModal = document.getElementById("strategiesModal");
-          const closeStrategiesModalBtn = document.getElementById(
-            "closeStrategiesModalBtn"
-          );
-          // === Strategies Modal Handling ===
-          document.addEventListener("DOMContentLoaded", () => {
-            const strategiesBtn = document.getElementById("strategiesBtn");
-            const strategiesModal = document.getElementById("strategiesModal");
-            const closeStrategiesModalBtn = document.getElementById(
-              "closeStrategiesModalBtn"
-            );
-
-            if (strategiesBtn && strategiesModal && closeStrategiesModalBtn) {
-              strategiesBtn.addEventListener("click", () => {
-                strategiesModal.classList.remove("hidden");
-              });
-
-              closeStrategiesModalBtn.addEventListener("click", () => {
-                strategiesModal.classList.add("hidden");
-              });
-            }
-          });
-
-          const strategyForm = document.getElementById("strategyForm");
-          const strategiesList = document.getElementById("strategiesList");
-          const strategyNameInput = document.getElementById("strategyName");
-          const addStrategyBtn = document.getElementById("addStrategyBtn");
-          const importCsvBtn = document.getElementById("importCsvBtn");
-          const csvFileInput = document.getElementById("csvFileInput");
-          const showDbDataBtn = document.getElementById("showDbDataBtn");
-          const rawDataModal = document.getElementById("rawDataModal");
-          const rawEntriesPre = document.getElementById("rawEntriesPre");
-          const rawStrategiesPre = document.getElementById("rawStrategiesPre");
-          const closeRawDataModalBtn = document.getElementById(
-            "closeRawDataModalBtn"
-          );
-          const metricsDashboard = document.getElementById("metricsDashboard");
-
-          const colorSelectorDiv = document.getElementById("colorSelector");
-          const shadeSelectorDiv = document.getElementById("shadeSelector");
-          const selectedColorBaseInput =
-            document.getElementById("selectedColorBase");
-          const selectedColorShadeInput =
-            document.getElementById("selectedColorShade");
-          const preTradeImageInput = document.getElementById("preTradeImage");
-          const postTradeImageInput = document.getElementById("postTradeImage");
-          const imageModal = document.getElementById("imageModal");
-          const closeImageModalBtn =
-            document.getElementById("closeImageModalBtn");
-          const zoomedImage = document.getElementById("zoomedImage");
-          const darkModeToggle = document.getElementById("darkModeToggle");
-          const backupJsonBtn = document.getElementById("backupJsonBtn");
-          const restoreJsonBtn = document.getElementById("restoreJsonBtn");
-
-          // Some elements may be undefined depending on GUI sections; guard them
-          function $(id) {
-            return document.getElementById(id);
-          }
-
-          // IndexedDB constants
-          const DB_NAME = "ForexJournalDB";
-          const DB_VERSION = 2;
-          const STORE_ENTRIES = "entries";
-          const STORE_STRATEGIES = "strategies";
-
-          // let db = null;
-          let currentStrategies = [];
-          let currentEntries = [];
-
-          // --- IndexedDB helpers ---
-          let db = null;
-
-          async function openDB() {
-            // ✅ Reuse an already-open database connection
-            if (db) return db;
-
-            return new Promise((resolve, reject) => {
-              const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-              request.onupgradeneeded = (event) => {
-                const dbInstance = event.target.result;
-
-                // Entries store
-                if (!dbInstance.objectStoreNames.contains(STORE_ENTRIES)) {
-                  const es = dbInstance.createObjectStore(STORE_ENTRIES, {
-                    keyPath: "id",
-                    autoIncrement: true,
-                  });
-                  es.createIndex("dateTime", ["date", "time"], {
-                    unique: false,
-                  });
-                }
-
-                // Strategies store
-                if (!dbInstance.objectStoreNames.contains(STORE_STRATEGIES)) {
-                  dbInstance.createObjectStore(STORE_STRATEGIES, {
-                    keyPath: "id",
-                  });
-                }
-              };
-
-              request.onsuccess = (event) => {
-                db = event.target.result;
-
-                // ✅ Keep connection open; reopen automatically if it closes
-                db.onclose = () => {
-                  console.warn("IndexedDB connection closed — reopening...");
-                  db = null;
-                };
-
-                resolve(db);
-              };
-
-              request.onerror = (event) => reject(event.target.error);
-            });
-          }
-
-          function txRequestPromise(req) {
-            return new Promise((res, rej) => {
-              req.onsuccess = () => res(req.result);
-              req.onerror = () => rej(req.error);
-            });
-          }
-
-          async function putItem(storeName, item) {
-            const idb = await openDB();
-            const tx = idb.transaction(storeName, "readwrite");
-            const store = tx.objectStore(storeName);
-            return txRequestPromise(store.put(item));
-          }
-          async function addItem(storeName, item) {
-            const idb = await openDB();
-            const tx = idb.transaction(storeName, "readwrite");
-            const store = tx.objectStore(storeName);
-            return txRequestPromise(store.add(item));
-          }
-          async function deleteItem(storeName, key) {
-            const idb = await openDB();
-            const tx = idb.transaction(storeName, "readwrite");
-            const store = tx.objectStore(storeName);
-            return txRequestPromise(store.delete(key));
-          }
-          async function getAll(storeName) {
-            const idb = await openDB();
-            const tx = idb.transaction(storeName, "readonly");
-            const store = tx.objectStore(storeName);
-            return txRequestPromise(store.getAll());
-          }
-
-          async function getById(storeName, id) {
-            const idb = await openDB();
-            const tx = idb.transaction(storeName, "readonly");
-            const store = tx.objectStore(storeName);
-            return new Promise((resolve, reject) => {
-              const req = store.get(id);
-              req.onsuccess = () => resolve(req.result);
-              req.onerror = () => reject(req.error);
-            });
-          }
-
-          // --- Defaults loader ---
-          async function ensureDefaults() {
-            let s = await getAll(STORE_STRATEGIES);
-            if (!s || s.length === 0) {
-              const defaults = [
-                {
-                  id: 1,
-                  name: "Asian Range Breakout",
-                  colorClass:
-                    "text-indigo-600 bg-indigo-100 dark:bg-indigo-800 dark:text-indigo-300",
-                  colorBase: "indigo",
-                  colorShade: "600",
-                },
-                {
-                  id: 2,
-                  name: "NY Reversal",
-                  colorClass:
-                    "text-violet-600 bg-violet-100 dark:bg-violet-800 dark:text-violet-300",
-                  colorBase: "violet",
-                  colorShade: "600",
-                },
-                {
-                  id: 3,
-                  name: "Trend Continuation",
-                  colorClass:
-                    "text-green-600 bg-green-100 dark:bg-green-800 dark:text-green-300",
-                  colorBase: "green",
-                  colorShade: "600",
-                },
-              ];
-              for (const d of defaults) await putItem(STORE_STRATEGIES, d);
-            }
-          }
-
-          // --- Loaders ---
-          async function loadStrategies() {
-            currentStrategies = await getAll(STORE_STRATEGIES);
-            renderStrategySelectors();
-            renderStrategiesList();
-            return currentStrategies;
-          }
-
-          async function loadEntries() {
-            currentEntries = await getAll(STORE_ENTRIES);
-            currentEntries.sort((a, b) => {
-              const da = new Date(
-                (a.date || "1970-01-01") + "T" + (a.time || "00:00") + ":00"
-              );
-              const dbd = new Date(
-                (b.date || "1970-01-01") + "T" + (b.time || "00:00") + ":00"
-              );
-              return dbd - da;
-            });
-            return currentEntries;
-          }
-
-          
-// Blob safe image resolver
-function resolveImageSource(data) {
-    if (!data) return "";
-    if (typeof data === "string") {
-        if (data.startsWith("data:image")) return data;
-        return "";
-    }
-    if (data instanceof Blob) {
-        try { return URL.createObjectURL(data); }
-        catch(e){ console.warn("Blob preview failed:", e); return ""; }
-    }
-    return "";
-}
-// --- UI helpers ---
-          function showMessageModal(message, type = "info") {
-            const modal = $("messageModal");
-            const text = $("modalMessage");
-            if (modal && text) {
-              text.textContent = message;
-              modal.classList.remove("hidden");
-              if (type === "success") {
-                setTimeout(() => modal.classList.add("hidden"), 2200);
-              }
-            } else {
-              alert(message);
-            }
-          }
-          function hideMessageModal() {
-            const m = $("messageModal");
-            if (m) m.classList.add("hidden");
-          }
-          const modalCloseBtn = $("modalCloseBtn");
-          if (modalCloseBtn)
-            modalCloseBtn.addEventListener("click", hideMessageModal);
-
-          // --- Strategy rendering ---
-          function renderStrategySelectors() {
-            const container = $("indicatorsContainer");
-            if (!container) return;
-            container.innerHTML = "";
-            const currentValue = $("strategy")
-              ? $("strategy").value.trim()
-              : "";
-            let selectedStrategies = currentValue
-              ? currentValue.split(" + ").map((s) => s.trim())
-              : [];
-            currentStrategies.forEach((s) => {
-              const button = document.createElement("button");
-              button.type = "button";
-              button.className =
-                s.colorClass +
-                " text-xs font-semibold px-3 py-1 rounded-full shadow-sm hover:opacity-80 transition";
-              button.textContent = s.name;
-              if (selectedStrategies.includes(s.name)) {
-                button.classList.add(
-                  "ring-2",
-                  "ring-offset-2",
-                  "ring-indigo-500",
-                  "dark:ring-violet-400"
-                );
-              }
-              button.onclick = () => {
-                if (selectedStrategies.includes(s.name)) {
-                  selectedStrategies = selectedStrategies.filter(
-                    (name) => name !== s.name
-                  );
-                  button.classList.remove(
-                    "ring-2",
-                    "ring-offset-2",
-                    "ring-indigo-500",
-                    "dark:ring-violet-400"
-                  );
-                } else {
-                  selectedStrategies.push(s.name);
-                  button.classList.add(
-                    "ring-2",
-                    "ring-offset-2",
-                    "ring-indigo-500",
-                    "dark:ring-violet-400"
-                  );
-                }
-                if ($("strategy"))
-                  $("strategy").value = selectedStrategies.join(" + ");
-              };
-              container.appendChild(button);
-            });
-          }
-
-          function renderStrategiesList() {
-            const list = document.getElementById("strategiesList");
-            if (!list) return;
-            list.innerHTML = "";
-
-            if (!currentStrategies || currentStrategies.length === 0) {
-              list.innerHTML =
-                '<p class="text-sm text-gray-500">No strategies defined.</p>';
-              return;
-            }
-
-            currentStrategies.forEach((s) => {
-              const div = document.createElement("div");
-              div.className =
-                "flex items-center justify-between p-2 border rounded-md bg-gray-50 dark:bg-gray-800";
-
-              // 🧩 note the updated data-action="edit-strategy"
-              div.innerHTML = `
-      <div>
-        <span class="px-2 py-1 rounded text-xs" style="background:${
-          s.colorHex || "#4f46e5"
-        }; color:white">${s.name}</span>
-      </div>
-      <div class="flex gap-2">
-        <button class="text-sm text-indigo-600" 
-                data-id="${s.id}" 
-                data-action="edit-strategy">
-          Edit
-        </button>
-        <button class="text-sm text-red-600" 
-                data-id="${s.id}" 
-                data-action="del">
-          Delete
-        </button>
-      </div>
-    `;
-
-              list.appendChild(div);
-            });
-
-            // Attach event listeners to the buttons
-            list.querySelectorAll("button").forEach((btn) => {
-              btn.addEventListener("click", async (ev) => {
-                ev.stopPropagation(); // prevent overlap with other click handlers
-                const id = parseInt(btn.dataset.id);
-                const action = btn.dataset.action;
-
-                if (action === "del") {
-                  if (!confirm("Delete strategy?")) return;
-                  await deleteItem(STORE_STRATEGIES, id);
-                  await loadStrategies();
-                  showMessageModal("Strategy deleted", "success");
-                }
-                // 🧩 note: changed from "edit" → "edit-strategy"
-                else if (action === "edit-strategy") {
-                  const s = await getById(STORE_STRATEGIES, id);
-                  if (!s) return;
-
-                  // Fill in form fields
-                  strategyNameInput.value = s.name;
-
-                  const colorPicker = document.getElementById(
-                    "strategyColorPicker"
-                  );
-                  if (s.colorHex) {
-                    colorPicker.value = s.colorHex;
-                  } else {
-                    colorPicker.value = "#4f46e5";
-                  }
-
-                  // Update the submit button to show “Update Strategy”
-                  addStrategyBtn.textContent = "Update Strategy";
-
-                  // Mark the form as editing mode
-                  strategyForm.dataset.editingId = s.id;
-                }
-              });
-            });
-          }
-
-          strategyForm.addEventListener("submit", async (ev) => {
-            ev.preventDefault();
-
-            const name = document.getElementById("strategyName").value.trim();
-            const colorHex = document.getElementById(
-              "strategyColorPicker"
-            ).value;
-            const addStrategyBtn = document.getElementById("addStrategyBtn");
-
-            if (!name) return;
-
-            // --- EDIT MODE ---
-            if (strategyForm.dataset.editingId) {
-              const id = parseInt(strategyForm.dataset.editingId);
-              const existing = currentStrategies.find((x) => x.id === id);
-              if (existing) {
-                existing.name = name;
-                existing.colorHex = colorHex;
-                await putItem(STORE_STRATEGIES, existing);
-              }
-              delete strategyForm.dataset.editingId;
-              addStrategyBtn.textContent = "Add Strategy";
-              showMessageModal("Strategy updated successfully!", "success");
-            }
-            // --- ADD MODE ---
-            else {
-              const newStrategy = {
-                id: Date.now(),
-                name,
-                colorHex,
-              };
-              await addItem(STORE_STRATEGIES, newStrategy);
-              showMessageModal("Strategy added successfully!", "success");
-            }
-
-            // Refresh + reset
-            await loadStrategies();
-            strategyForm.reset();
-            document.getElementById("strategyColorPicker").value = "#4f46e5";
-          });
-
-          // --- Entries rendering ---
-
-          function createStrategyChips(entry) {
-            if (!entry || !entry.strategy) return "";
-            const names = entry.strategy
-              .split(/\s*\+\s*/)
-              .map((x) => x.trim())
-              .filter(Boolean);
-            const chips = names.map((n) => {
-              const s = currentStrategies.find((x) => x.name === n);
-              if (s) {
-                // Prefer hex color if available (user-created strategies)
-                if (s.colorHex) {
-                  // use inline background and pick contrasting text (white) for simplicity
-                  return `<span style="background:${s.colorHex}; color:white" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium shadow-sm">${n}</span>`;
-                }
-                // Fallback to existing Tailwind color classes (defaults)
-                if (s.colorClass) {
-                  return `<span class="${s.colorClass} inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium">${n}</span>`;
-                }
-              }
-              return `<span class="bg-gray-200 text-gray-800 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium">${n}</span>`;
-            });
-            return chips.join(
-              ' <span class="text-gray-600 dark:text-gray-400 mx-1">+</span> '
-            );
-          }
-          window.showImageModal = function (src) {
-            const imgModal = $("imageModal");
-            const zoom = $("zoomedImage");
-            if (!imgModal || !zoom) return;
-            zoom.src = src;
-            imgModal.classList.remove("hidden");
-          };
-
-          const closeImgBtn = $("closeImageModalBtn");
-          if (closeImgBtn)
-            closeImgBtn.addEventListener("click", () => {
-              const m = $("imageModal");
-              if (m) m.classList.add("hidden");
-            });
-
-          function renderEntryCard(entry) {
-            const outcomeColor =
-              entry.outcome === "Win"
-                ? "border-green-500"
-                : entry.outcome === "Loss"
-                ? "border-red-500"
-                : "border-yellow-500";
-            const outcomeTextColor =
-              entry.outcome === "Win"
-                ? "text-green-500"
-                : entry.outcome === "Loss"
-                ? "text-red-500"
-                : "text-yellow-500";
-            const preSrc = resolveImageSource(entry.preTradeImage);
-const postSrc = resolveImageSource(entry.postTradeImage);
-
-const preThumb = preSrc
-    ? `<img src="${preSrc}" alt="Pre Trade"
-         class="w-20 h-20 object-cover rounded-lg cursor-zoom-in hover:opacity-80 transition"
-         onclick="showImageModal('${preSrc}')">`
-    : "";
-
-const postThumb = postSrc
-    ? `<img src="${postSrc}" alt="Post Trade"
-         class="w-20 h-20 object-cover rounded-lg cursor-zoom-in hover:opacity-80 transition"
-         onclick="showImageModal('${postSrc}')">`
-    : "";
-
-            return `
-              <div class="p-4 rounded-xl shadow-lg border-l-4 ${outcomeColor} bg-white dark:bg-gray-900 transition duration-300 hover:shadow-xl">
-                <div class="flex justify-between items-start mb-2">
-                  <div class="flex flex-col">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">${
-                      entry.pair
-                    }
-                      <span class="text-sm font-normal text-gray-500 dark:text-gray-400">(${
-                        entry.timeFrame
-                      })</span></h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">${
-                      entry.date
-                    } at ${entry.time}</p>
-                  </div>
-                  <div class="text-right">
-                    <p class="text-xl font-extrabold ${outcomeTextColor}">${
-              entry.rMultiple || "0.00"
-            } R</p>
-                    <div class="entry-strategies mt-1">${
-                      createStrategyChips(entry) ||
-                      '<span class="text-gray-500">N/A</span>'
-                    }</div>
-                  </div>
-                </div>
-                <div class="entry-images mb-3">
-                  ${preThumb}
-                  ${postThumb}
-                </div>
-                <div class="grid grid-cols-2 gap-2 text-sm mb-3 text-gray-700 dark:text-gray-300">
-                  <div><span class="font-semibold">Direction:</span>
-                      <span class="font-medium ${
-                        entry.direction === "Buy"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }">${entry.direction}</span>
-                  </div>
-                  <div><span class="font-semibold">Exit:</span> ${
-                    entry.exitReason
-                  }</div>
-                  <div><span class="font-semibold">Entry:</span> ${
-                    entry.entryPrice
-                  }</div>
-                  <div><span class="font-semibold">Exit Price:</span> ${
-                    entry.exitPrice
-                  }</div>
-                </div>
-                <details class="trade-details mt-2 border-t pt-3 border-gray-200 dark:border-gray-700">
-                  <summary class="cursor-pointer text-sm font-semibold hover:text-indigo-800 dark:hover:text-violet-400 transition">
-                    View Details
-                  </summary>
-                  <div class="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                    <p><span class="font-semibold">Stop Loss:</span> ${
-                      entry.slPrice
-                    } /
-                       <span class="font-semibold">Take Profit:</span> ${
-                         entry.tpPrice
-                       }</p>
-                    <p><span class="font-semibold">Lot Size:</span> ${
-                      entry.lotSize
-                    }</p>
-                    <p><span class="font-semibold">Grade:</span> ${
-                      entry.setupGrade
-                    } /
-                       <span class="font-semibold">Follow Plan:</span> ${
-                         entry.didFollowPlan
-                       }</p>
-                    <p><span class="font-semibold">Emotion:</span> ${
-                      entry.emotionalState
-                    }</p>
-                    <p class="mt-2"><span class="font-semibold block mb-1">Lessons Learned:</span>
-                       ${entry.lessonsLearned || "N/A"}</p>
-                    <p><span class="font-semibold block mb-1">Notes:</span>
-                       ${entry.notes || "N/A"}</p>
-                  </div>
-                </details>
-                <div class="flex justify-end space-x-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-                  <button class="text-indigo-600 hover:text-indigo-800 dark:text-violet-400 dark:hover:text-violet-600 transition text-sm" data-action="edit" data-id="${
-                    entry.id
-                  }">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-600 transition text-sm" data-action="delete" data-id="${
-                    entry.id
-                  }">Delete</button>
-                </div>
-              </div>
-            `;
-          }
-
-          async function renderJournalEntries(filteredEntries = null) {
-            if (loadingDiv) loadingDiv.classList.remove("hidden");
-            if (!filteredEntries) {
-              await loadEntries();
-              filteredEntries = currentEntries;
-            }
-            renderMetrics(calculateMetrics(filteredEntries));
-            renderStrategyUsage(filteredEntries);
-
-            journalList.innerHTML = "";
-            if (!filteredEntries || filteredEntries.length === 0) {
-              if (noEntriesDiv) noEntriesDiv.classList.remove("hidden");
-            } else {
-              if (noEntriesDiv) noEntriesDiv.classList.add("hidden");
-              filteredEntries.forEach((entry) => {
-                journalList.innerHTML += renderEntryCard(entry);
-              });
-              // attach edit/delete handlers
-              journalList
-                .querySelectorAll("button[data-action]")
-                .forEach((btn) => {
-                  btn.addEventListener("click", async (ev) => {
-                    const id = parseInt(btn.dataset.id);
-                    const action = btn.dataset.action;
-                    if (action === "delete") {
-                      if (!confirm("Delete this entry?")) return;
-                      await deleteItem(STORE_ENTRIES, id);
-                      await loadEntries();
-                      await renderJournalEntries();
-                      showMessageModal("Entry deleted", "success");
-                    } else if (action === "edit") {
-                      const entry = await getById(STORE_ENTRIES, id);
-                      if (!entry) return;
-
-                      console.log("📝 Editing journal entry:", entry);
-
-                      // ✅ Use your existing modal and form population function
-                      populateFormForEdit(entry);
-                    }
-                  });
-                });
-            }
-            if (loadingDiv) loadingDiv.classList.add("hidden");
-          }
-          // === Filtering Functionality ===
-          const filterInput = document.getElementById("filterInput");
-          const startDateInput = document.getElementById("startDate");
-          const endDateInput = document.getElementById("endDate");
-          const pairFilter = document.getElementById("pairFilter");
-          const outcomeRadios = document.querySelectorAll(
-            'input[name="tradeOutcomeFilter"]'
-          );
-          // === FILTER TRIGGER DELAY ===
-          // This prevents the filter from firing too many times in a row.
-          let filterTimeout;
-
-          function triggerFilters() {
-            // Cancel the previous scheduled call (if any)
-            clearTimeout(filterTimeout);
-
-            // Wait 300 milliseconds after the last change before running filters
-            filterTimeout = setTimeout(() => {
-              applyFilters();
-            }, 300);
-          }
-
-          // === FIXED FILTER FUNCTION ===
-          async function applyFilters() {
-            // Get all saved journal entries
-            let entries = await getAll(STORE_ENTRIES);
-
-            // Make sure each entry has an outcome (Winner, Loser, etc.)
-            entries.forEach((e) => {
-              if (!e.outcome) calculateR(e);
-            });
-
-            // Read all filter input fields
-            const filterText = filterInput.value.trim().toLowerCase();
-            const startDate = startDateInput.value
-              ? new Date(startDateInput.value)
-              : null;
-            const endDate = endDateInput.value
-              ? new Date(endDateInput.value)
-              : null;
-            const selectedPair = pairFilter.value;
-            const selectedOutcome =
-              [...outcomeRadios].find((r) => r.checked)?.value || "All";
-
-            // Filter the entries
-            const filtered = entries.filter((e) => {
-              // --- Ensure date & time parse correctly ---
-              let entryDateTime = null;
-              if (e.date) {
-                // Detect format (YYYY-MM-DD or MM/DD/YYYY)
-                if (e.date.includes("-")) {
-                  let [year, month, day] = e.date.split("-");
-                  let timePart = (e.time || "00:00")
-                    .toString()
-                    .replace(/^(\d{1,2})(\d{2})$/, "$1:$2");
-                  entryDateTime = new Date(
-                    `${year}-${month}-${day}T${timePart}:00`
-                  );
-                } else if (e.date.includes("/")) {
-                  let [month, day, year] = e.date.split("/");
-                  let timePart = (e.time || "00:00")
-                    .toString()
-                    .replace(/^(\d{1,2})(\d{2})$/, "$1:$2");
-                  entryDateTime = new Date(
-                    `${year}-${month}-${day}T${timePart}:00`
-                  );
-                }
-              }
-
-              // --- Date range filter ---
-              if (startDate && entryDateTime && entryDateTime < startDate)
-                return false;
-              if (endDate && entryDateTime && entryDateTime > endDate)
-                return false;
-
-              // --- Pair filter ---
-              if (
-                selectedPair !== "All" &&
-                e.pair &&
-                e.pair.trim() !== selectedPair.trim()
-              )
-                return false;
-
-              // --- Outcome filter ---
-              const entryOutcome = (e.outcome || "").toLowerCase();
-              if (
-                selectedOutcome !== "All" &&
-                entryOutcome !== selectedOutcome.toLowerCase()
-              )
-                return false;
-
-              // --- Text search filter ---
-              if (
-                filterText &&
-                !(
-                  (e.pair && e.pair.toLowerCase().includes(filterText)) ||
-                  (e.strategy &&
-                    e.strategy.toLowerCase().includes(filterText)) ||
-                  (e.notes && e.notes.toLowerCase().includes(filterText))
-                )
-              )
-                return false;
-
-              return true;
-            });
-
-            // Render the results
-            renderJournalEntries(filtered);
-          }
-
-          // === Filter Event Listeners ===
-          // === FILTER EVENT LISTENERS ===
-          if (filterInput)
-            filterInput.addEventListener("input", triggerFilters);
-          if (startDateInput)
-            startDateInput.addEventListener("change", triggerFilters);
-          if (endDateInput)
-            endDateInput.addEventListener("change", triggerFilters);
-          if (pairFilter) pairFilter.addEventListener("change", triggerFilters);
-          outcomeRadios.forEach((r) =>
-            r.addEventListener("change", triggerFilters)
-          );
-
-          function populateFormForEdit(entry) {
-            try {
-              const modal = document.getElementById("addEntryModal");
-              const modalContent = document.getElementById(
-                "addEntryModalContent"
-              );
-
-              // Show the modal
-              modal.classList.remove("hidden");
-              modal.classList.add("flex");
-              modal.style.opacity = "1";
-              modalContent.style.transform = "scale(1)";
-              modalContent.style.opacity = "1";
-
-              // Prefill input fields with current entry data
-              document.getElementById("date").value = entry.date || "";
-              document.getElementById("time").value = entry.time || "";
-              document.getElementById("pair").value = entry.pair || "GBP/USD";
-              document.getElementById("direction").value =
-                entry.direction || "Buy";
-              document.getElementById("strategy").value = entry.strategy || "";
-              document.getElementById("timeFrame").value =
-                entry.timeFrame || "M1";
-              document.getElementById("entryPrice").value =
-                entry.entryPrice || "";
-              document.getElementById("slPrice").value = entry.slPrice || "";
-              document.getElementById("tpPrice").value = entry.tpPrice || "";
-              document.getElementById("exitPrice").value =
-                entry.exitPrice || "";
-              document.getElementById("exitReason").value =
-                entry.exitReason || "TP";
-              document.getElementById("lotSize").value = entry.lotSize || "";
-              document.getElementById("setupGrade").value =
-                entry.setupGrade || "A";
-              document.getElementById("didFollowPlan").value =
-                entry.didFollowPlan || "Yes";
-              document.getElementById("emotionalState").value =
-                entry.emotionalState || "Calm";
-              document.getElementById("lessonsLearned").value =
-                entry.lessonsLearned || "";
-              document.getElementById("notes").value = entry.notes || "";
-
-              // Set the entry ID for editing mode
-              journalForm.dataset.editingId = entry.id;
-              submitBtn.querySelector("span").textContent = "Save Changes";
-
-              // Re-render strategy selectors (highlighting selected strategies)
-              renderStrategySelectors();
-
-              // Highlight selected strategies
-              const selectedStrategies = (entry.strategy || "")
-                .split(" + ")
-                .map((s) => s.trim());
-              document
-                .querySelectorAll("#indicatorsContainer button")
-                .forEach((btn) => {
-                  if (selectedStrategies.includes(btn.textContent.trim())) {
-                    btn.classList.add(
-                      "ring-2",
-                      "ring-offset-2",
-                      "ring-indigo-500",
-                      "dark:ring-violet-400"
-                    );
-                  } else {
-                    btn.classList.remove(
-                      "ring-2",
-                      "ring-offset-2",
-                      "ring-indigo-500",
-                      "dark:ring-violet-400"
-                    );
-                  }
-                });
-
-              // Set the image fields only if there are uploaded images
-              const preImageField = document.getElementById("preTradeImage");
-              const postImageField = document.getElementById("postTradeImage");
-
-              // If there is an existing image for preTradeImage, keep it
-              if (entry.preTradeImage) {
-                preImageField.setAttribute("src", entry.preTradeImage);
-                preImageField.setAttribute("alt", "Pre-Trade Image");
-              }
-
-              // If there is an existing image for postTradeImage, keep it
-              if (entry.postTradeImage) {
-                postImageField.setAttribute("src", entry.postTradeImage);
-                postImageField.setAttribute("alt", "Post-Trade Image");
-              }
-            } catch (err) {
-              console.error(err);
-            }
-          }
-
-          // Handle form submit (add or update)
-          if (journalForm) {
-            
-async function readFileAsBlob(input) {
-    return new Promise((resolve) => {
-        if (!input || !input.files || !input.files[0]) return resolve(null);
-        resolve(input.files[0]);
-    });
-}
-journalForm.addEventListener("submit", async (ev) => {
-              ev.preventDefault();
-
-              const form = ev.target;
-              const obj = {};
-
-              // Collect form data (simplified for clarity)
-              new FormData(form).forEach((v, k) => (obj[k] = v));
-
-              // Convert images to Base64 or preserve old ones
-              const editingId = form.dataset.editingId
-                ? parseInt(form.dataset.editingId)
-                : null;
-              let existing = null;
-
-              if (editingId) {
-                existing = await getAll("entries").then((list) =>
-                  list.find((x) => x.id === editingId)
-                );
-              }
-
-              const preFile = document.getElementById("preTradeImage").files[0];
-              const postFile =
-                document.getElementById("postTradeImage").files[0];
-
-              // Helper to convert file to base64
-              async function fileToBase64(file) {
-                return new Promise((res, rej) => {
-                  if (!file) return res("");
-                  const reader = new FileReader();
-                  reader.onload = () => res(reader.result);
-                  reader.onerror = rej;
-                  reader.readAsDataURL(file);
-                });
-              }
-
-              // ✅ Preserve or update images correctly
-              obj.preTradeImage =
-                (await fileToBase64(preFile)) || existing?.preTradeImage || "";
-              obj.postTradeImage =
-                (await fileToBase64(postFile)) ||
-                existing?.postTradeImage ||
-                "";
-
-              if (editingId) {
-                // ✅ Update existing entry
-                obj.id = editingId;
-                await putItem("entries", obj);
-                delete form.dataset.editingId; // clear editing mode
-                showMessageModal("Entry updated successfully!", "success");
-              } else {
-                // ✅ Add new entry
-                await addItem("entries", obj);
-                showMessageModal("New entry added successfully!", "success");
-              }
-
-              // Refresh UI
-              // 1. Reset the form immediately (This is fast)
-              form.reset();
-              const modal = document.getElementById("addEntryModal");
-              if (modal) modal.classList.add("hidden"); // 2. DEFER THE SLOW RENDER
-
-              // This runs *after* the success message modal (A or B) has been clicked and closed.
-              setTimeout(async () => {
-                await renderJournalEntries();
-              }, 50);
-            });
-          }
-
-          // --- File to base64 ---
-          function fileToBase64(file) {
-            return new Promise((res, rej) => {
-              if (!file) return res(null);
-              const MAX_SIZE = 1048576;
-              if (file.size > MAX_SIZE) {
-                showMessageModal("File too large (>1MB).", "error");
-                return res(null);
-              }
-              const reader = new FileReader();
-              reader.onload = () => res(reader.result);
-              reader.onerror = () => res(null);
-              reader.readAsDataURL(file);
-            });
-          }
-
-          // --- R calculation ---
-          function calculateR(entry) {
-            const entryPrice = parseFloat(entry.entryPrice);
-            const exitPrice = parseFloat(entry.exitPrice);
-            const slPrice = parseFloat(entry.slPrice);
-            if (
-              isNaN(entryPrice) ||
-              isNaN(exitPrice) ||
-              isNaN(slPrice) ||
-              slPrice === entryPrice
-            ) {
-              entry.rMultiple = "0.00";
-              entry.outcome = "Invalid";
-              return 0;
-            }
-            const isJPY = entry.pair && entry.pair.includes("JPY");
-            const multiplier = isJPY ? 100 : 10000;
-            const riskInPips = Math.abs(entryPrice - slPrice) * multiplier;
-            if (riskInPips === 0) {
-              entry.rMultiple = "0.00";
-              entry.outcome = "Break-Even";
-              return 0;
-            }
-            let profitInPips =
-              entry.direction === "Buy"
-                ? (exitPrice - entryPrice) * multiplier
-                : (entryPrice - exitPrice) * multiplier;
-            const rMultiple = profitInPips / riskInPips;
-            const R_THRESHOLD = 0.1;
-            if (rMultiple > R_THRESHOLD) entry.outcome = "Win";
-            else if (rMultiple < -R_THRESHOLD) entry.outcome = "Loss";
-            else entry.outcome = "Break-Even";
-            entry.rMultiple = rMultiple.toFixed(2);
-            return rMultiple;
-          }
-
-          // --- Metrics ---
-          function calculateMetrics(entries) {
-            const totalTrades = entries.length;
-            let totalRScore = 0;
-            let winningTrades = 0;
-            for (const entry of entries) {
-              const r = calculateR(entry);
-              totalRScore += r;
-              if (entry.outcome === "Win") winningTrades++;
-            }
-            const winRate =
-              totalTrades > 0 ? (winningTrades / totalTrades) * 100 : 0;
-            const avgRR = totalTrades > 0 ? totalRScore / totalTrades : 0;
-            return {
-              winRate: winRate.toFixed(1),
-              totalTrades,
-              totalRScore: totalRScore.toFixed(2),
-              avgRR: avgRR.toFixed(2),
-            };
-          }
-
-          function renderMetrics(metrics) {
-            if (!metricsDashboard) return;
-            function card(title, value, colorClass = "") {
-              return `<div class="p-3 rounded-xl flex flex-col items-center justify-center ${colorClass} shadow-md border-2 border-transparent"><div class="text-xs font-semibold uppercase opacity-80">${title}</div><div class="text-2xl font-bold mt-1">${value}</div></div>`;
-            }
-            metricsDashboard.innerHTML = `
-              ${card(
-                "Total Trades",
-                metrics.totalTrades,
-                "bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300"
-              )}
-              ${card(
-                "Win Rate",
-                metrics.winRate + "%",
-                metrics.winRate >= 50
-                  ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300"
-                  : "bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300"
-              )}
-              ${card(
-                "Total R-Score",
-                metrics.totalRScore,
-                metrics.totalRScore >= 0
-                  ? "bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300"
-                  : "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300"
-              )}
-              ${card(
-                "Avg R-Multiple",
-                metrics.avgRR,
-                metrics.avgRR >= 0
-                  ? "bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300"
-                  : "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300"
-              )}
-            `;
-          }
-
-          // === Strategy Usage Rendering ===
-          function renderStrategyUsage(entries) {
-            const container = document.getElementById("strategyUsageContent");
-            if (!container) return;
-            container.innerHTML = "";
-
-            const counts = {};
-            entries.forEach((e) => {
-              if (!e.strategy) return;
-              e.strategy
-                .split("+")
-                .map((s) => s.trim())
-                .filter(Boolean)
-                .forEach((str) => {
-                  counts[str] = (counts[str] || 0) + 1;
-                });
-
-              // === AUTO-SAVE STRATEGIES FROM USAGE LIST (unique, case-insensitive, cleans duplicates, with logs) ===
-              (async () => {
-                try {
-                  const db = await openDB();
-                  const tx = db.transaction(STORE_STRATEGIES, "readwrite");
-                  const store = tx.objectStore(STORE_STRATEGIES);
-                  const existing = await txRequestPromise(store.getAll());
-
-                  // 🧹 Clean existing duplicates (case-insensitive)
-                  const seen = new Set();
-                  for (const s of existing) {
-                    const lower = s.name.toLowerCase().trim();
-                    if (seen.has(lower)) {
-                      await store.delete(s.id);
-                      console.log("🧹 Deleted duplicate strategy:", s.name);
-                    } else {
-                      seen.add(lower);
-                    }
-                  }
-
-                  // Normalize existing strategy names (case-insensitive)
-                  const refreshed = await txRequestPromise(store.getAll());
-                  const existingNamesLower = refreshed.map((s) =>
-                    s.name.toLowerCase().trim()
-                  );
-
-                  // Get unique strategy names from current counts, ignoring case
-                  const uniqueNames = Object.keys(counts).reduce(
-                    (acc, name) => {
-                      const lower = name.toLowerCase().trim();
-                      if (!acc.some((n) => n.toLowerCase() === lower))
-                        acc.push(name.trim());
-                      return acc;
-                    },
-                    []
-                  );
-
-                  for (const strategyName of uniqueNames) {
-                    // ✅ Add only if it doesn’t already exist (case-insensitive)
-                    if (
-                      !existingNamesLower.includes(
-                        strategyName.toLowerCase().trim()
-                      )
-                    ) {
-                      const colors = [
-                        "indigo",
-                        "violet",
-                        "green",
-                        "blue",
-                        "orange",
-                        "pink",
-                      ];
-                      const shades = ["500", "600", "700"];
-                      const colorBase =
-                        colors[Math.floor(Math.random() * colors.length)];
-                      const colorShade =
-                        shades[Math.floor(Math.random() * shades.length)];
-                      const colorClass = `text-${colorBase}-${colorShade} bg-${colorBase}-100 dark:bg-${colorBase}-800 dark:text-${colorBase}-300`;
-
-                      await putItem(STORE_STRATEGIES, {
-                        id: Date.now() + Math.floor(Math.random() * 10000),
-                        name: strategyName.trim(),
-                        colorClass,
-                        colorBase,
-                        colorShade,
-                      });
-                      console.log("✅ Added new strategy:", strategyName);
-                    }
-                  }
-                } catch (err) {
-                  console.error("⚠️ Error in auto-save strategies block:", err);
-                }
-              })();
-            });
-
-            // Convert to array and sort descending
-            let sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-
-            let showingAll = false;
-            const renderList = () => {
-              container.innerHTML = "";
-              const display = showingAll ? sorted : sorted.slice(0, 5);
-              display.forEach(([name, count]) => {
-                const s = currentStrategies.find((x) => x.name === name);
-                const colorClass = s
-                  ? s.colorClass
-                  : "bg-gray-200 text-gray-800";
-                const div = document.createElement("div");
-                div.className = `${colorClass} px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-between`;
-                div.innerHTML = `
-                <span>${name}</span>
-                <span class="text-xs font-bold bg-white/30 dark:bg-black/20 px-2 py-0.5 rounded-md">${count}</span>
-              `;
-                container.appendChild(div);
-              });
-            };
-
-            // Toggle button
-            let toggleBtn = document.getElementById("toggleStrategyListBtn");
-            if (!toggleBtn) {
-              toggleBtn = document.createElement("button");
-              toggleBtn.id = "toggleStrategyListBtn";
-              toggleBtn.className =
-                "mt-3 text-sm font-semibold text-indigo-600 dark:text-violet-400 hover:underline";
-              toggleBtn.textContent = "Show All Strategies";
-              toggleBtn.addEventListener("click", () => {
-                showingAll = !showingAll;
-                toggleBtn.textContent = showingAll
-                  ? "Show Top 5 Only"
-                  : "Show All Strategies";
-                renderList();
-              });
-              container.parentElement.appendChild(toggleBtn);
-            }
-
-            renderList();
-          }
-
-          // --- Render functions for selectors already defined earlier ---
-          function renderStrategySelectorsWrapper() {
-            renderStrategySelectors();
-          }
-
-          // --- Save strategies array by clearing and repopulating store ---
-          async function saveStrategies(strategies) {
-            const idb = await openDB();
-            const tx = idb.transaction(STORE_STRATEGIES, "readwrite");
-            const store = tx.objectStore(STORE_STRATEGIES);
-            await new Promise((res) => {
-              const c = store.clear();
-              c.onsuccess = () => res();
-              c.onerror = () => res();
-            });
-            for (const s of strategies) {
-              await new Promise((res) => {
-                const r = store.put(s);
-                r.onsuccess = () => res();
-                r.onerror = () => res();
-              });
-            }
-            currentStrategies = strategies;
-            renderStrategySelectors();
-            renderStrategiesList();
-          }
-
-          // --- Load all raw data (for backup) ---
-          async function loadAllRawData() {
-            const entries = await getAll(STORE_ENTRIES);
-            const strategies = await getAll(STORE_STRATEGIES);
-            return { entries, strategies };
-          }
-
-          async function overwriteEntries(newEntries) {
-            const idb = await openDB();
-            const tx = idb.transaction(STORE_ENTRIES, "readwrite");
-            const store = tx.objectStore(STORE_ENTRIES);
-            await new Promise((res) => {
-              const c = store.clear();
-              c.onsuccess = () => res();
-              c.onerror = () => res();
-            });
-            for (const entry of newEntries) {
-              const copy = Object.assign({}, entry);
-              if (copy.id) delete copy.id;
-              await addItem(STORE_ENTRIES, copy);
-            }
-          }
-
-          // --- Backup & Restore JSON handlers ---
-          if (backupJsonBtn)
-            backupJsonBtn.addEventListener("click", async () => {
-              try {
-                const data = await loadAllRawData();
-                const jsonData = JSON.stringify(data, null, 2);
-
-                // ✅ Detect Android WebView bridge
-                if (
-                  window.Android &&
-                  typeof window.Android.saveBackupBase64 === "function"
-                ) {
-                  const base64Data = btoa(
-                    unescape(encodeURIComponent(jsonData))
-                  );
-                  window.Android.saveBackupBase64(base64Data);
-                  alert("✅ Backup saved to Downloads (Android)");
-                } else {
-                  // ✅ Fallback for desktop browsers
-                  const blob = new Blob([jsonData], {
-                    type: "application/json",
-                  });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = `forex_journal_backup_${
-                    new Date().toISOString().split("T")[0]
-                  }.json`;
-                  a.click();
-                  URL.revokeObjectURL(url);
-                  showMessageModal(
-                    "Backup (JSON) file created successfully.",
-                    "success"
-                  );
-                }
-              } catch (err) {
-                console.error(err);
-                showMessageModal("Failed to create JSON backup.", "error");
-              }
-            });
-
-          // Hidden file input for JSON restore (guarantee it exists)
-          let jsonFileInput = document.querySelector(
-            'input[type="file"][accept=".json"]'
-          );
-          if (!jsonFileInput) {
-            jsonFileInput = document.createElement("input");
-            jsonFileInput.type = "file";
-            jsonFileInput.accept = ".json";
-            jsonFileInput.classList.add("hidden");
-            document.body.appendChild(jsonFileInput);
-          }
-          if (restoreJsonBtn)
-            restoreJsonBtn.addEventListener("click", () =>
-              jsonFileInput.click()
-            );
-
-          jsonFileInput.addEventListener("change", async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            try {
-              const text = await file.text();
-              const data = JSON.parse(text);
-              if (!data.entries || !data.strategies) {
-                showMessageModal("Invalid backup file format.", "error");
-                return;
-              }
-              await overwriteEntries(data.entries);
-              await saveStrategies(data.strategies);
-              await loadEntries();
-              await renderJournalEntries();
-              showMessageModal(
-                "Database restored successfully from JSON.",
-                "success"
-              );
-            } catch (err) {
-              console.error(err);
-              showMessageModal("Failed to restore from JSON.", "error");
-            } finally {
-              jsonFileInput.value = "";
-            }
-          });
-
-          // --- CSV import/export (using PapaParse if available) ---
-          function downloadBlob(dataStr, filename, mime) {
-            const blob = new Blob([dataStr], {
-              type: mime || "application/octet-stream",
-            });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-          }
-
-          if (window.Papa) {
-            if (document.getElementById("backupCsvBtn"))
-              document
-                .getElementById("backupCsvBtn")
-                .addEventListener("click", async () => {
-                  try {
-                    const all = await getAll(STORE_ENTRIES);
-                    if (!all || all.length === 0) {
-                      showMessageModal("No entries to export.", "info");
-                      return;
-                    }
-                    const rows = all.map((e) => ({
-                      id: e.id,
-                      date: e.date,
-                      time: e.time,
-                      pair: e.pair,
-                      direction: e.direction,
-                      strategy: e.strategy,
-                      timeFrame: e.timeFrame,
-                      entryPrice: e.entryPrice,
-                      slPrice: e.slPrice,
-                      tpPrice: e.tpPrice,
-                      exitPrice: e.exitPrice,
-                      exitReason: e.exitReason,
-                      lotSize: e.lotSize,
-                      setupGrade: e.setupGrade,
-                      didFollowPlan: e.didFollowPlan,
-                      emotionalState: e.emotionalState,
-                      preTradeImage: e.preTradeImage || "",
-                      postTradeImage: e.postTradeImage || "",
-                      lessonsLearned: e.lessonsLearned || "",
-                      notes: e.notes || "",
-                    }));
-                    const csv = window.Papa.unparse(rows);
-                    downloadBlob(
-                      csv,
-                      `forex_journal_${
-                        new Date().toISOString().split("T")[0]
-                      }.csv`,
-                      "text/csv;charset=utf-8;"
-                    );
-                    showMessageModal("CSV exported.", "success");
-                  } catch (err) {
-                    console.error(err);
-                    showMessageModal("CSV export failed.", "error");
-                  }
-                });
-            // import
-            if (importCsvBtn && csvFileInput) {
-              importCsvBtn.addEventListener("click", () =>
-                csvFileInput.click()
-              );
-              csvFileInput.addEventListener("change", (ev) => {
-                const f = ev.target.files[0];
-                if (!f) return;
-                window.Papa.parse(f, {
-                  header: true,
-                  skipEmptyLines: true,
-                  complete: async (results) => {
-                    const rows = results.data;
-                    for (const r of rows) {
-                      
-const convertIfBase64 = (str) => {
-  if (!str || typeof str !== 'string') return null;
-  if (str.startsWith('data:image')) {
-    const mime = str.substring(5, str.indexOf(';')) || 'image/jpeg';
-    const b64 = str.split(',')[1];
-    try {
-      const byteString = atob(b64);
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-      return new Blob([ab], { type: mime });
-    } catch (e) { console.warn('Failed to convert data URL to Blob', e); return null; }
-  }
-  // raw base64 (may contain whitespace)
-  const cleaned = str.replace(/\s+/g, '');
-  if (/^[A-Za-z0-9+/=]+$/.test(cleaned)) {
-    try {
-      const byteString = atob(cleaned);
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-      return new Blob([ab], { type: 'image/jpeg' });
-    } catch (e) { console.warn('Failed to convert raw base64 to Blob', e); return null; }
-  }
-  return null;
-};
-
-const preBlob = convertIfBase64(r.preTradeImage);
-const postBlob = convertIfBase64(r.postTradeImage);
-
-const entry = {
-  date: r.date || "",
-  time: r.time || "",
-  pair: r.pair || "GBP/USD",
-  direction: r.direction || "Buy",
-  strategy: r.strategy || "",
-  timeFrame: r.timeFrame || "M1",
-  entryPrice: r.entryPrice || "",
-  slPrice: r.slPrice || "",
-  tpPrice: r.tpPrice || "",
-  exitPrice: r.exitPrice || "",
-  exitReason: r.exitReason || "TP",
-  lotSize: r.lotSize || "",
-  setupGrade: r.setupGrade || "A",
-  didFollowPlan: r.didFollowPlan || "Yes",
-  emotionalState: r.emotionalState || "Calm",
-  preTradeImage: preBlob || (r.preTradeImage || ""),
-  postTradeImage: postBlob || (r.postTradeImage || ""),
-  lessonsLearned: r.lessonsLearned || "",
-  notes: r.notes || ""
-};
-
-                      if (entry.id) delete entry.id;
-                      await addItem(STORE_ENTRIES, entry);
-                    }
-                    await loadEntries();
-                    renderJournalEntries();
-                    showMessageModal("CSV imported.", "success");
-                    csvFileInput.value = "";
-                  },
-                  error: (err) => {
-                    console.error(err);
-                    showMessageModal("CSV import failed.", "error");
-                    csvFileInput.value = "";
-                  },
-                });
-              });
-            }
-          } else {
-            // fallback: attach simple handlers for UI buttons if Papa not present
-            if (importCsvBtn)
-              importCsvBtn.addEventListener("click", () =>
-                showMessageModal(
-                  "PapaParse not loaded. CSV import disabled.",
-                  "error"
-                )
-              );
-            if (document.getElementById("backupCsvBtn"))
-              document
-                .getElementById("backupCsvBtn")
-                .addEventListener("click", () =>
-                  showMessageModal(
-                    "PapaParse not loaded. CSV export disabled.",
-                    "error"
-                  )
-                );
-          }
-
-          // --- Raw data modal handlers ---
-          if (showDbDataBtn)
-            showDbDataBtn.addEventListener("click", async () => {
-              const entries = await getAll(STORE_ENTRIES);
-              const strategies = await getAll(STORE_STRATEGIES);
-              if (rawEntriesPre)
-                rawEntriesPre.textContent = JSON.stringify(entries, null, 2);
-              if (rawStrategiesPre)
-                rawStrategiesPre.textContent = JSON.stringify(
-                  strategies,
-                  null,
-                  2
-                );
-              if (rawDataModal) rawDataModal.classList.remove("hidden");
-            });
-          if (closeRawDataModalBtn)
-            closeRawDataModalBtn.addEventListener("click", () =>
-              rawDataModal.classList.add("hidden")
-            );
-
-          // --- Strategies modal open/close ---
-          if (strategiesBtn)
-            strategiesBtn.addEventListener("click", async () => {
-              await loadStrategies();
-              if (strategiesModal) strategiesModal.classList.remove("hidden");
-            });
-          if (closeStrategiesModalBtn)
-            closeStrategiesModalBtn.addEventListener("click", () =>
-              strategiesModal.classList.add("hidden")
-            );
-
-          // --- Strategy add form ---
-          if (strategyForm)
-            strategyForm.addEventListener("submit", async (ev) => {
-              ev.preventDefault();
-              const name = (
-                (strategyNameInput && strategyNameInput.value) ||
-                ""
-              ).trim();
-              if (!name) {
-                showMessageModal("Enter strategy name.", "error");
-                return;
-              }
-              const newStrategy = {
-                id: Date.now(),
-                name,
-                colorClass:
-                  "text-indigo-600 bg-indigo-100 dark:bg-indigo-800 dark:text-indigo-300",
-                colorBase: "indigo",
-                colorShade: "600",
-              };
-              await putItem(STORE_STRATEGIES, newStrategy);
-              strategyNameInput.value = "";
-              await loadStrategies();
-              showMessageModal("New strategy added to the DB.", "success");
-            });
-
-          // --- Helpers: normalize time ---
-          function normalizeTimeFormat(timeStr) {
-            if (!timeStr) return "";
-            const cleanStr = timeStr.toString().replace(/[^0-9]/g, "");
-            if (cleanStr.length === 4)
-              return `${cleanStr.substring(0, 2)}:${cleanStr.substring(2, 4)}`;
-            return timeStr;
-          }
-
-          // --- Filters (basic) ---
-
-          // --- Raw Data modal show/hide already wired earlier ---
-
-          // --- Init ---
-          (async function init() {
-            try {
-              await openDB();
-              await ensureDefaults();
-              await loadStrategies();
-              await loadEntries();
-              await renderJournalEntries();
-              console.log("Initialization complete.");
-            } catch (err) {
-              console.error("Init error", err);
-              showMessageModal(
-                "Initialization failed: Could not load data.",
-                "error"
-              );
-            }
-
-            // === Expose helper functions globally ===
-            window.openDB = openDB;
-            window.loadEntries = loadEntries;
-            window.renderJournalEntries = renderJournalEntries;
-            window.ensureDefaults = ensureDefaults;
-            window.getAll = getAll;
-            window.loadAllRawData = loadAllRawData;
-
-            // --- Delete All Entries Button Handler (Entries + Strategies) ---
-            const deleteAllBtn = document.getElementById("deleteAllBtn");
-            if (deleteAllBtn) {
-              deleteAllBtn.addEventListener("click", async () => {
-                if (
-                  !confirm(
-                    "Are you sure you want to delete ALL journal entries and strategies? This cannot be undone."
-                  )
-                )
-                  return;
-                try {
-                  const idb = await openDB();
-
-                  // Clear both object stores
-                  const tx = idb.transaction(
-                    ["entries", "strategies"],
-                    "readwrite"
-                  );
-                  const entriesStore = tx.objectStore("entries");
-                  const strategiesStore = tx.objectStore("strategies");
-
-                  await Promise.all([
-                    new Promise((res, rej) => {
-                      const req = entriesStore.clear();
-                      req.onsuccess = () => res();
-                      req.onerror = () => rej(req.error);
-                    }),
-                    new Promise((res, rej) => {
-                      const req = strategiesStore.clear();
-                      req.onsuccess = () => res();
-                      req.onerror = () => rej(req.error);
-                    }),
-                  ]);
-
-                  await ensureDefaults(); // re-add default strategies
-                  await loadEntries();
-                  await renderJournalEntries();
-
-                  // Update raw data modal
-                  if (typeof loadAllRawData === "function") {
-                    const raw = await loadAllRawData();
-                    const rawEntriesPre =
-                      document.getElementById("rawEntriesPre");
-                    const rawStrategiesPre =
-                      document.getElementById("rawStrategiesPre");
-                    if (rawEntriesPre)
-                      rawEntriesPre.textContent = JSON.stringify(
-                        raw.entries,
-                        null,
-                        2
-                      );
-                    if (rawStrategiesPre)
-                      rawStrategiesPre.textContent = JSON.stringify(
-                        raw.strategies,
-                        null,
-                        2
-                      );
-                  }
-
-                  showMessageModal(
-                    "All entries and strategies deleted successfully.",
-                    "success"
-                  );
-                } catch (err) {
-                  console.error(err);
-                  showMessageModal("Failed to delete all entries.", "error");
-                }
-              });
-            }
-          })();
-
-          // === Expose helper functions globally ===
-          window.openDB = openDB;
-          window.loadEntries = loadEntries;
-          window.renderJournalEntries = renderJournalEntries;
-          window.ensureDefaults = ensureDefaults;
-          window.getAll = getAll;
-          window.loadAllRawData = loadAllRawData;
-
-          // --- Delete All Entries Button Handler (Entries + Strategies) ---
-          const deleteAllBtn = document.getElementById("deleteAllBtn");
-          if (deleteAllBtn) {
-            deleteAllBtn.addEventListener("click", async () => {
-              if (
-                !confirm(
-                  "Are you sure you want to delete ALL journal entries and strategies? This cannot be undone."
-                )
-              )
-                return;
-              try {
-                const idb = await openDB();
-
-                // Clear both object stores
-                const tx = idb.transaction(
-                  ["entries", "strategies"],
-                  "readwrite"
-                );
-                const entriesStore = tx.objectStore("entries");
-                const strategiesStore = tx.objectStore("strategies");
-
-                await Promise.all([
-                  new Promise((res, rej) => {
-                    const req = entriesStore.clear();
-                    req.onsuccess = () => res();
-                    req.onerror = () => rej(req.error);
-                  }),
-                  new Promise((res, rej) => {
-                    const req = strategiesStore.clear();
-                    req.onsuccess = () => res();
-                    req.onerror = () => rej(req.error);
-                  }),
-                ]);
-
-                await ensureDefaults(); // re-add default strategies
-                await loadEntries();
-                await renderJournalEntries();
-
-                // Update raw data modal
-                if (typeof loadAllRawData === "function") {
-                  const raw = await loadAllRawData();
-                  const rawEntriesPre =
-                    document.getElementById("rawEntriesPre");
-                  const rawStrategiesPre =
-                    document.getElementById("rawStrategiesPre");
-                  if (rawEntriesPre)
-                    rawEntriesPre.textContent = JSON.stringify(
-                      raw.entries,
-                      null,
-                      2
-                    );
-                  if (rawStrategiesPre)
-                    rawStrategiesPre.textContent = JSON.stringify(
-                      raw.strategies,
-                      null,
-                      2
-                    );
-                }
-
-                showMessageModal(
-                  "All entries and strategies deleted successfully.",
-                  "success"
-                );
-              } catch (err) {
-                console.error(err);
-                showMessageModal("Failed to delete all entries.", "error");
-              }
-            });
-          }
-        })(); // end consolidated IIFE
-
-        //temporaryF
-        console.log(
-          "Connected:",
-          startDateInput,
-          endDateInput,
-          pairFilter,
-          outcomeRadios
-        );
-      </script>
-      <script>
-        (function () {
-          const addFab = document.getElementById("addEntryFab");
-          const modal = document.getElementById("addEntryModal");
-          const modalContent = document.getElementById("addEntryModalContent");
-          const closeBtn = document.getElementById("closeAddEntryModalBtn");
-          const closeFooterBtn = document.getElementById(
-            "closeAddEntryModalFooterBtn"
-          );
-
-          function openModal() {
-            if (!modal) return;
-            modal.classList.remove("hidden");
-            // trigger reflow then set opacity/scale for animation
-            requestAnimationFrame(() => {
-              modal.style.opacity = "1";
-              modal.classList.remove("opacity-0");
-              modalContent.style.transform = "scale(1)";
-              modalContent.classList.remove("scale-95");
-            });
-            // prevent background scroll
-            document.documentElement.style.overflow = "hidden";
-            document.body.style.overflow = "hidden";
-          }
-          function closeModal() {
-            if (!modal) return;
-            // animate out
-            modal.style.opacity = "0";
-            modal.classList.add("opacity-0");
-            modalContent.style.transform = "scale(0.95)";
-            modalContent.classList.add("scale-95");
-            setTimeout(() => {
-              modal.classList.add("hidden");
-              // restore scroll
-              document.documentElement.style.overflow = "";
-              document.body.style.overflow = "";
-            }, 200);
-          }
-
-          if (addFab)
-            addFab.addEventListener("click", (e) => {
-              e.preventDefault();
-              openModal();
-            });
-
-          if (closeBtn)
-            closeBtn.addEventListener("click", (e) => {
-              e.preventDefault();
-              closeModal();
-            });
-          if (closeFooterBtn)
-            closeFooterBtn.addEventListener("click", (e) => {
-              e.preventDefault();
-              closeModal();
-            });
-
-          // close when clicking outside modal content
-          if (modal) {
-            modal.addEventListener("click", (e) => {
-              if (e.target === modal) closeModal();
-            });
-          }
-
-          // If form had editing state and was previously shown, ensure modal shows when editing
-          const journalForm = document.getElementById("journalForm");
-          if (journalForm) {
-            // Intercept when form gets dataset.editingId set externally: open modal
-            const originalSet = Object.getOwnPropertyDescriptor(
-              HTMLFormElement.prototype,
-              "dataset"
-            ).get;
-            // can't easily trap dataset changes universally; instead ensure that when populateFormForEdit is called it opens modal.
-            // So override the global function if present:
-            if (typeof populateFormForEdit === "function") {
-              const originalPopulate = populateFormForEdit;
-              window.populateFormForEdit = function (entry) {
-                originalPopulate(entry);
-                openModal();
-              };
-            }
-          }
-
-          // === Expose helper functions globally ===
-          window.openDB = openDB;
-          window.loadEntries = loadEntries;
-          window.renderJournalEntries = renderJournalEntries;
-          window.ensureDefaults = ensureDefaults;
-          window.getAll = getAll;
-          window.loadAllRawData = loadAllRawData;
-
-          // --- Delete All Entries Button Handler (Entries + Strategies) ---
-          const deleteAllBtn = document.getElementById("deleteAllBtn");
-          if (deleteAllBtn) {
-            deleteAllBtn.addEventListener("click", async () => {
-              if (
-                !confirm(
-                  "Are you sure you want to delete ALL journal entries and strategies? This cannot be undone."
-                )
-              )
-                return;
-              try {
-                const idb = await openDB();
-
-                // Clear both object stores
-                const tx = idb.transaction(
-                  ["entries", "strategies"],
-                  "readwrite"
-                );
-                const entriesStore = tx.objectStore("entries");
-                const strategiesStore = tx.objectStore("strategies");
-
-                await Promise.all([
-                  new Promise((res, rej) => {
-                    const req = entriesStore.clear();
-                    req.onsuccess = () => res();
-                    req.onerror = () => rej(req.error);
-                  }),
-                  new Promise((res, rej) => {
-                    const req = strategiesStore.clear();
-                    req.onsuccess = () => res();
-                    req.onerror = () => rej(req.error);
-                  }),
-                ]);
-
-                await ensureDefaults(); // re-add default strategies
-                await loadEntries();
-                await renderJournalEntries();
-
-                // Update raw data modal
-                if (typeof loadAllRawData === "function") {
-                  const raw = await loadAllRawData();
-                  const rawEntriesPre =
-                    document.getElementById("rawEntriesPre");
-                  const rawStrategiesPre =
-                    document.getElementById("rawStrategiesPre");
-                  if (rawEntriesPre)
-                    rawEntriesPre.textContent = JSON.stringify(
-                      raw.entries,
-                      null,
-                      2
-                    );
-                  if (rawStrategiesPre)
-                    rawStrategiesPre.textContent = JSON.stringify(
-                      raw.strategies,
-                      null,
-                      2
-                    );
-                }
-
-                showMessageModal(
-                  "All entries and strategies deleted successfully.",
-                  "success"
-                );
-              } catch (err) {
-                console.error(err);
-                showMessageModal("Failed to delete all entries.", "error");
-              }
-            });
-          }
-        })();
-      </script>
-      <script>
-        (function () {
-          const toggle = document.getElementById("darkModeToggle");
-          const html = document.documentElement;
-          if (!toggle) return;
-
-          // Helper to set initial theme
-          function applySavedTheme() {
-            const saved = localStorage.getItem("theme");
-            if (
-              saved === "dark" ||
-              (!saved &&
-                window.matchMedia &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches)
-            ) {
-              html.classList.add("dark");
-            } else {
-              html.classList.remove("dark");
-            }
-            updateIcons();
-          }
-
-          // Find icon spans safely (use order as a fallback)
-          const spans = Array.from(toggle.querySelectorAll("span"));
-          const moonSpan = spans[0] || null;
-          const sunSpan = spans[1] || null;
-
-          function updateIcons() {
-            try {
-              const isDark = html.classList.contains("dark");
-              if (moonSpan) moonSpan.style.display = isDark ? "none" : "";
-              if (sunSpan) sunSpan.style.display = isDark ? "" : "none";
-            } catch (e) {
-              /* silent */
-            }
-          }
-
-          // Toggle handler
-          toggle.addEventListener("click", function (e) {
-            e.preventDefault();
-            html.classList.toggle("dark");
-            const isDark = html.classList.contains("dark");
-            try {
-              localStorage.setItem("theme", isDark ? "dark" : "light");
-            } catch (e) {}
-            updateIcons();
-          });
-
-          // Init on load
-          applySavedTheme();
-
-          // Also listen to system theme changes if user hasn't explicitly set theme
-          try {
-            const mq = window.matchMedia("(prefers-color-scheme: dark)");
-            mq.addEventListener
-              ? mq.addEventListener("change", (e) => {
-                  if (!localStorage.getItem("theme")) applySavedTheme();
-                })
-              : mq.addListener((e) => {
-                  if (!localStorage.getItem("theme")) applySavedTheme();
-                });
-          } catch (e) {}
-
-          // === Expose helper functions globally ===
-          window.openDB = openDB;
-          window.loadEntries = loadEntries;
-          window.renderJournalEntries = renderJournalEntries;
-          window.ensureDefaults = ensureDefaults;
-          window.getAll = getAll;
-          window.loadAllRawData = loadAllRawData;
-
-          // --- Delete All Entries Button Handler (Entries + Strategies) ---
-          const deleteAllBtn = document.getElementById("deleteAllBtn");
-          if (deleteAllBtn) {
-            deleteAllBtn.addEventListener("click", async () => {
-              if (
-                !confirm(
-                  "Are you sure you want to delete ALL journal entries and strategies? This cannot be undone."
-                )
-              )
-                return;
-              try {
-                const idb = await openDB();
-
-                // Clear both object stores
-                const tx = idb.transaction(
-                  ["entries", "strategies"],
-                  "readwrite"
-                );
-                const entriesStore = tx.objectStore("entries");
-                const strategiesStore = tx.objectStore("strategies");
-
-                await Promise.all([
-                  new Promise((res, rej) => {
-                    const req = entriesStore.clear();
-                    req.onsuccess = () => res();
-                    req.onerror = () => rej(req.error);
-                  }),
-                  new Promise((res, rej) => {
-                    const req = strategiesStore.clear();
-                    req.onsuccess = () => res();
-                    req.onerror = () => rej(req.error);
-                  }),
-                ]);
-
-                await ensureDefaults(); // re-add default strategies
-                await loadEntries();
-                await renderJournalEntries();
-
-                // Update raw data modal
-                if (typeof loadAllRawData === "function") {
-                  const raw = await loadAllRawData();
-                  const rawEntriesPre =
-                    document.getElementById("rawEntriesPre");
-                  const rawStrategiesPre =
-                    document.getElementById("rawStrategiesPre");
-                  if (rawEntriesPre)
-                    rawEntriesPre.textContent = JSON.stringify(
-                      raw.entries,
-                      null,
-                      2
-                    );
-                  if (rawStrategiesPre)
-                    rawStrategiesPre.textContent = JSON.stringify(
-                      raw.strategies,
-                      null,
-                      2
-                    );
-                }
-
-                showMessageModal(
-                  "All entries and strategies deleted successfully.",
-                  "success"
-                );
-              } catch (err) {
-                console.error(err);
-                showMessageModal("Failed to delete all entries.", "error");
-              }
-            });
-          }
-        })();
-      </script>
->>>>>>> a0823573854bb126707a7d2b60927a607b5f1138
     </div>
 
     <script>
@@ -3333,7 +501,7 @@ const entry = {
               // Dummy implementation for web/testing where plugin is not available
               console.warn("Capacitor SQLite Plugin not available. Using a dummy implementation.");
               return {
-                  open: async () => ({ database: DB_NAME }), // Returns database name as a substitute for databaseId
+                  open: async () => ({ database: DB_NAME }),
                   execute: async (options) => { console.log("Dummy Execute:", options.statements); return { changes: { changes: 0 } }; },
                   query: async (options) => { console.log("Dummy Query:", options.statement); return { values: [] }; },
                   close: async () => { console.log("Dummy Close."); },
@@ -3347,11 +515,18 @@ const entry = {
       const Sqlite = getSqlitePlugin();
 
       /**
-       * Open the SQLite database and initialize the tables.
+       * Generates a simple, unique ID for tradeId.
+       * @returns {string}
+       */
+      function generateTradeId() {
+          return Math.random().toString(36).substring(2, 9);
+      }
+      
+      /**
+       * Open the SQLite database and initialize the tables with the full CSV structure.
        */
       async function openDB() {
           try {
-              // The `open` method handles creation/opening
               const { database } = await Sqlite.open({
                   database: DB_NAME,
                   encrypted: false,
@@ -3359,21 +534,34 @@ const entry = {
                   version: 1,
                   readonly: false
               });
-              db = database; // Use the database name as the identifier
+              db = database;
 
               // SQL statements to create tables if they do not exist
-              // The 'id' column in entries will be the primary key for auto-increment.
+              // Updated to match all CSV columns (including a primary key 'id' for internal use)
               const statements = `
                   CREATE TABLE IF NOT EXISTS ${STORE_ENTRIES} (
                       id INTEGER PRIMARY KEY,
+                      tradeId TEXT,
                       date TEXT NOT NULL,
+                      time TEXT,
                       pair TEXT NOT NULL,
-                      strategy TEXT NOT NULL,
                       direction TEXT NOT NULL,
-                      result TEXT NOT NULL,
+                      strategy TEXT NOT NULL,
+                      timeFrame TEXT,
+                      entryPrice REAL,
+                      slPrice REAL,
+                      tpPrice REAL,
+                      exitPrice REAL,
+                      exitReason TEXT,
                       pips REAL,
-                      image TEXT,
+                      lotSize REAL,
+                      rMultiple REAL,
+                      setupGrade TEXT,
+                      didFollowPlan TEXT,
+                      emotionalState TEXT,
+                      lessonsLearned TEXT,
                       notes TEXT,
+                      postTradeImage TEXT,
                       timestamp INTEGER NOT NULL
                   );
                   CREATE TABLE IF NOT EXISTS ${STORE_STRATEGIES} (
@@ -3383,7 +571,7 @@ const entry = {
               `;
 
               await Sqlite.execute({ database: db, statements: statements });
-              console.log("SQLite Database initialized.");
+              console.log("SQLite Database initialized with full schema.");
           } catch (err) {
               console.error("SQLite Initialization failed:", err);
               throw err;
@@ -3398,30 +586,35 @@ const entry = {
        */
       async function addItem(storeName, item) {
           if (storeName === STORE_ENTRIES) {
-              // Save a trade entry
-              const sql = item.id
-                  ? `
-                      UPDATE ${STORE_ENTRIES} SET
-                          date=?, pair=?, strategy=?, direction=?, result=?, pips=?, image=?, notes=?, timestamp=?
-                      WHERE id=?
-                  `
-                  : `
-                      INSERT INTO ${STORE_ENTRIES}
-                          (date, pair, strategy, direction, result, pips, image, notes, timestamp)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                  `;
+              // Extract all entry columns
+              const columns = [
+                  "tradeId", "date", "time", "pair", "direction", "strategy", "timeFrame",
+                  "entryPrice", "slPrice", "tpPrice", "exitPrice", "exitReason", "pips",
+                  "lotSize", "rMultiple", "setupGrade", "didFollowPlan", "emotionalState",
+                  "lessonsLearned", "notes", "postTradeImage", "timestamp"
+              ];
+              
+              const values = columns.map(col => item[col] || null);
+              
+              if (item.id) {
+                  // Update mode
+                  const setClauses = columns.map(col => `${col}=?`).join(', ');
+                  const sql = `UPDATE ${STORE_ENTRIES} SET ${setClauses} WHERE id=?`;
+                  
+                  // Append id for the WHERE clause
+                  values.push(item.id);
 
-              const values = item.id
-                  ? [
-                      item.date, item.pair, item.strategy, item.direction, item.result, item.pips || null, item.image || null, item.notes || null, item.timestamp,
-                      item.id
-                  ]
-                  : [
-                      item.date, item.pair, item.strategy, item.direction, item.result, item.pips || null, item.image || null, item.notes || null, item.timestamp
-                  ];
+                  const result = await Sqlite.run({ database: db, statement: sql, values: values });
+                  return item.id;
+              } else {
+                  // Insert mode
+                  const columnNames = columns.join(', ');
+                  const placeholders = values.map(() => '?').join(', ');
+                  const sql = `INSERT INTO ${STORE_ENTRIES} (${columnNames}) VALUES (${placeholders})`;
 
-              const result = await Sqlite.run({ database: db, statement: sql, values: values });
-              return item.id ? item.id : result.changes.lastId;
+                  const result = await Sqlite.run({ database: db, statement: sql, values: values });
+                  return result.changes.lastId;
+              }
           } else if (storeName === STORE_STRATEGIES) {
               // Save a strategy. Name is the primary key.
               const sql = `INSERT OR REPLACE INTO ${STORE_STRATEGIES} (name, description) VALUES (?, ?)`;
@@ -3443,7 +636,6 @@ const entry = {
           const sql = `SELECT * FROM ${storeName} ${orderBy}`;
           const result = await Sqlite.query({ database: db, statement: sql, values: [] });
 
-          // Rows are returned as an array of objects
           return result.values || [];
       }
 
@@ -3456,15 +648,6 @@ const entry = {
           const keyColumn = storeName === STORE_ENTRIES ? 'id' : 'name';
           const sql = `DELETE FROM ${storeName} WHERE ${keyColumn} = ?`;
           await Sqlite.run({ database: db, statement: sql, values: [key] });
-      }
-
-      /**
-       * Clears all data from a store (table).
-       * @param {string} storeName - The name of the table.
-       */
-      async function clear(storeName) {
-          const sql = `DELETE FROM ${storeName}`;
-          await Sqlite.run({ database: db, statement: sql, values: [] });
       }
 
       // =========================================================================================================================
@@ -3487,8 +670,9 @@ const entry = {
       const deleteAllBtn = document.getElementById("deleteAllBtn");
       const filterText = document.getElementById("filterText");
 
-      const imageFile = document.getElementById("imageFile");
-      const imageDataField = document.getElementById("imageData");
+      // Renamed for consistency with CSV: postTradeImage
+      const postTradeImageFile = document.getElementById("postTradeImageFile");
+      const postTradeImageDataField = document.getElementById("postTradeImageData");
       const imagePreview = document.getElementById("imagePreview");
       const imagePreviewContainer = document.getElementById("imagePreviewContainer");
       const clearImageBtn = document.getElementById("clearImageBtn");
@@ -3519,31 +703,60 @@ const entry = {
         e.preventDefault();
 
         const entryId = document.getElementById("entryId").value;
+        
+        // Collect all data points from the expanded form
         const date = document.getElementById("tradeDate").value;
+        const time = document.getElementById("tradeTime").value || null;
         const pair = document.getElementById("currencyPair").value.toUpperCase();
         const strategy = document.getElementById("strategy").value;
         const direction = document.getElementById("direction").value;
-        const result = document.getElementById("result").value;
+        const timeFrame = document.getElementById("timeFrame").value || null;
+        const entryPrice = parseFloat(document.getElementById("entryPrice").value) || null;
+        const slPrice = parseFloat(document.getElementById("slPrice").value) || null;
+        const tpPrice = parseFloat(document.getElementById("tpPrice").value) || null;
+        const exitPrice = parseFloat(document.getElementById("exitPrice").value) || null;
+        const exitReason = document.getElementById("exitReason").value || null;
         const pips = parseFloat(document.getElementById("pips").value) || null;
+        const lotSize = parseFloat(document.getElementById("lotSize").value) || null;
+        const rMultiple = parseFloat(document.getElementById("rMultiple").value) || null;
+        const setupGrade = document.getElementById("setupGrade").value || null;
+        const didFollowPlan = document.getElementById("didFollowPlan").value || null;
+        const emotionalState = document.getElementById("emotionalState").value.trim() || null;
+        const lessonsLearned = document.getElementById("lessonsLearned").value.trim() || null;
         const notes = document.getElementById("notes").value.trim() || null;
-        let image = imageDataField.value || null;
+        let postTradeImage = postTradeImageDataField.value || null;
 
         // Handle new image upload during submission
-        if (imageFile.files.length > 0) {
-          image = await fileToBase64(imageFile.files[0]);
+        if (postTradeImageFile.files.length > 0) {
+          postTradeImage = await fileToBase64(postTradeImageFile.files[0]);
         }
-
+        
+        const existingTradeId = document.getElementById("tradeId").value;
+        
         const newEntry = {
           // If editing, use the existing ID (SQLite will UPDATE)
           id: entryId ? parseInt(entryId) : undefined,
+          tradeId: existingTradeId || generateTradeId(),
           date,
+          time,
           pair,
-          strategy,
           direction,
-          result,
+          strategy,
+          timeFrame,
+          entryPrice,
+          slPrice,
+          tpPrice,
+          exitPrice,
+          exitReason,
           pips,
-          image,
+          lotSize,
+          rMultiple,
+          setupGrade,
+          didFollowPlan,
+          emotionalState,
+          lessonsLearned,
           notes,
+          postTradeImage,
           timestamp: entryId ? journalEntries.find(e => e.id === parseInt(entryId)).timestamp : Date.now(),
         };
 
@@ -3583,14 +796,14 @@ const entry = {
        */
       function initImageListeners() {
         // Preview image on file selection
-        imageFile.addEventListener("change", (e) => {
+        postTradeImageFile.addEventListener("change", (e) => {
           const file = e.target.files[0];
           if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
               imagePreview.src = e.target.result;
               imagePreviewContainer.classList.remove("hidden");
-              imageDataField.value = ""; // Clear hidden field if new file is selected
+              postTradeImageDataField.value = ""; // Clear hidden field if new file is selected
             };
             reader.readAsDataURL(file);
           } else {
@@ -3601,12 +814,40 @@ const entry = {
 
         // Clear button to remove the image (either new or existing)
         clearImageBtn.addEventListener("click", () => {
-          imageFile.value = "";
-          imageDataField.value = "";
+          postTradeImageFile.value = "";
+          postTradeImageDataField.value = "";
           imagePreview.src = "";
           imagePreviewContainer.classList.add("hidden");
         });
       }
+
+      /**
+       * Determines the text and color for the trade result based on rMultiple or pips.
+       * @param {number} rMultiple - The R-Multiple value.
+       * @param {number} pips - The pips value.
+       * @returns {Object} { text, class }
+       */
+      function getTradeResultDisplay(rMultiple, pips) {
+          const r = rMultiple || 0;
+          const p = pips || 0;
+          
+          let resultText;
+          let resultClass;
+
+          if (r > 0.01 || p > 0.01) { // A win if R-Multiple or Pips is significantly positive
+              resultText = 'Win';
+              resultClass = "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 border-green-500";
+          } else if (r < -0.01 || p < -0.01) { // A loss if R-Multiple or Pips is significantly negative
+              resultText = 'Loss';
+              resultClass = "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100 border-red-500";
+          } else {
+              resultText = 'Break Even';
+              resultClass = "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100 border-yellow-500";
+          }
+
+          return { text: resultText, class: resultClass };
+      }
+
 
       /**
        * Renders the list of journal entries.
@@ -3615,121 +856,89 @@ const entry = {
         const filterValue = filterText.value.toLowerCase();
 
         const filteredEntries = journalEntries.filter((entry) => {
-          const searchString = `${entry.pair} ${entry.strategy} ${entry.notes || ""}`.toLowerCase();
+          const searchString = `${entry.pair} ${entry.strategy} ${entry.exitReason || ""} ${entry.timeFrame || ""} ${entry.setupGrade || ""} ${entry.emotionalState || ""} ${entry.notes || ""} ${entry.lessonsLearned || ""}`.toLowerCase();
           return searchString.includes(filterValue);
         });
 
-<<<<<<< HEAD
         if (filteredEntries.length === 0) {
           entriesList.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400">No trades found.</p>`;
-=======
-      function reloadAppData() {
-        console.log("🔄 Reloading app data...");
-        if (window.Capacitor) {
-          location.reload(); // Safe in APK
-        } else {
-          window.location.reload(); // Safe in browser
-        }
-      }
-
-      console.log(
-        "✅ Unified Refresh Helper ready. Use softRefreshUI() or reloadAppData()."
-      );
-    </script>
-    <!-- Color Save Instant Refresh Helper -->
-    <script>
-      async function afterColorSave() {
-        console.log("🎨 Color update saved. Refreshing display...");
-        if (typeof renderJournalEntries === "function") {
-          try {
-            await renderJournalEntries();
-            console.log("✅ Colors refreshed instantly.");
-          } catch (err) {
-            console.warn(
-              "⚠️ renderJournalEntries failed, fallback to reload",
-              err
-            );
-            reloadAppData();
-          }
-        } else {
-          reloadAppData();
-        }
-      }
-      console.log(
-        "✅ afterColorSave() helper active. Call it after saving a color."
-      );
-    </script>
-    <!-- Front-End Patch: Apply strategy color immediately after save -->
-    <script>
-      async function applyStrategyColorToUI(strategyName, colorValue) {
-        if (!strategyName || !colorValue) return;
-
-        // Find all elements related to this strategy
-        const elements = document.querySelectorAll(
-          `[data-strategy-name="${strategyName}"]`
-        );
-        if (elements.length === 0) {
-          console.debug(
-            `INFO: No visible elements found for strategy: ${strategyName}.`
-          );
->>>>>>> a0823573854bb126707a7d2b60927a607b5f1138
           return;
         }
 
         entriesList.innerHTML = filteredEntries
-          .map(
-            (entry) => `
+          .map((entry) => {
+            const resultDisplay = getTradeResultDisplay(entry.rMultiple, entry.pips);
+            
+            // Helper function for display
+            const formatValue = (value, unit = "") => value !== null ? `<span class="text-sm text-gray-600 dark:text-gray-300">${value}${unit}</span>` : '';
+
+            return `
               <div
-                class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-start sm:items-center border-l-4 ${
-                  entry.result === "Win"
-                    ? "border-green-500"
-                    : entry.result === "Loss"
-                    ? "border-red-500"
-                    : "border-yellow-500"
-                }"
+                class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow flex flex-col justify-between items-start border-l-4 ${resultDisplay.class.split(' ').pop()}"
               >
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center space-x-3 mb-1">
-                    <span class="text-lg font-bold text-gray-900 dark:text-gray-100">${entry.pair}</span>
-                    <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${
-                      entry.result === "Win"
-                        ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
-                        : entry.result === "Loss"
-                        ? "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100"
-                        : "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100"
-                    }">${entry.result}</span>
-                    ${entry.pips !== null ? `<span class="text-sm text-gray-600 dark:text-gray-300">${entry.pips >= 0 ? "+" : ""}${entry.pips} pips</span>` : ""}
+                <div class="flex-1 min-w-0 w-full">
+                  <div class="flex flex-wrap items-center justify-between mb-2">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-lg font-bold text-gray-900 dark:text-gray-100">${entry.pair} (${entry.timeFrame || 'N/A'})</span>
+                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full ${resultDisplay.class}">
+                          ${resultDisplay.text}
+                        </span>
+                        ${entry.setupGrade ? `<span class="text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-100 px-2 py-0.5 rounded-full">Grade: ${entry.setupGrade}</span>` : ''}
+                    </div>
+                    <div class="flex items-center space-x-3 text-sm font-medium">
+                        ${entry.rMultiple !== null ? `<span class="text-indigo-700 dark:text-indigo-300">R: ${entry.rMultiple.toFixed(2)}</span>` : ''}
+                        ${entry.pips !== null ? `<span class="text-gray-700 dark:text-gray-300">${entry.pips >= 0 ? "+" : ""}${entry.pips} pips</span>` : ''}
+                    </div>
                   </div>
-                  <p class="text-sm text-indigo-600 dark:text-indigo-400 font-medium mb-1">${entry.strategy}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">${entry.date} - ${entry.direction}</p>
+                  
+                  <p class="text-sm text-indigo-600 dark:text-indigo-400 font-medium mb-1">${entry.strategy} / ${entry.direction}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">${entry.date} ${entry.time ? `- ${entry.time}` : ''} | Exit: ${entry.exitReason || 'N/A'} | Plan: ${entry.didFollowPlan || 'N/A'}</p>
+                  
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-gray-600 dark:text-gray-400 mt-2">
+                    ${formatValue(entry.entryPrice, ' Entry')}
+                    ${formatValue(entry.slPrice, ' SL')}
+                    ${formatValue(entry.tpPrice, ' TP')}
+                    ${formatValue(entry.exitPrice, ' Exit')}
+                    ${formatValue(entry.lotSize, ' Lot')}
+                    ${entry.emotionalState ? `<span class="italic text-gray-500">State: ${entry.emotionalState}</span>` : ''}
+                  </div>
+                  
                   ${
                     entry.notes
-                      ? `<p class="text-sm text-gray-700 dark:text-gray-300 mt-2 italic">${entry.notes}</p>`
+                      ? `<p class="text-sm text-gray-700 dark:text-gray-300 mt-2"><strong>Notes:</strong> ${entry.notes}</p>`
                       : ""
                   }
                   ${
-                    entry.image
-                      ? `<img src="${entry.image}" alt="Trade Screenshot" class="mt-2 w-20 h-20 object-cover rounded-md cursor-pointer" onclick="viewImage('${entry.image}')" />`
+                    entry.lessonsLearned
+                      ? `<p class="text-sm text-yellow-700 dark:text-yellow-300 mt-2"><strong>Lessons:</strong> ${entry.lessonsLearned}</p>`
                       : ""
                   }
-                </div>
-                <div class="flex space-x-2 mt-3 sm:mt-0">
-                  <button
-                    onclick="editEntry(${entry.id})"
-                    class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200 text-sm font-semibold"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onclick="deleteEntry(${entry.id})"
-                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-200 text-sm font-semibold"
-                  >
-                    Delete
-                  </button>
+
+                  <div class="flex justify-between items-end mt-3">
+                    ${
+                      entry.postTradeImage
+                        ? `<img src="${entry.postTradeImage}" alt="Trade Screenshot" class="w-20 h-20 object-cover rounded-md cursor-pointer" onclick="viewImage('${entry.postTradeImage}')" />`
+                        : ""
+                    }
+                    <div class="flex space-x-2">
+                        <button
+                          onclick="editEntry(${entry.id})"
+                          class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200 text-sm font-semibold"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onclick="deleteEntry(${entry.id})"
+                          class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-200 text-sm font-semibold"
+                        >
+                          Delete
+                        </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            `
-          )
+            `;
+          })
           .join("");
       }
 
@@ -3744,24 +953,37 @@ const entry = {
         // Scroll to the form
         window.scrollTo({ top: 0, behavior: "smooth" });
 
-        // Populate form fields
+        // Populate all expanded form fields
         document.getElementById("entryId").value = entry.id;
+        document.getElementById("tradeId").value = entry.tradeId; // Keep existing tradeId
         document.getElementById("tradeDate").value = entry.date;
+        document.getElementById("tradeTime").value = entry.time || '';
         document.getElementById("currencyPair").value = entry.pair;
         document.getElementById("strategy").value = entry.strategy;
         document.getElementById("direction").value = entry.direction;
-        document.getElementById("result").value = entry.result;
+        document.getElementById("timeFrame").value = entry.timeFrame || '';
+        document.getElementById("entryPrice").value = entry.entryPrice;
+        document.getElementById("slPrice").value = entry.slPrice;
+        document.getElementById("tpPrice").value = entry.tpPrice;
+        document.getElementById("exitPrice").value = entry.exitPrice;
+        document.getElementById("exitReason").value = entry.exitReason || '';
         document.getElementById("pips").value = entry.pips;
-        document.getElementById("notes").value = entry.notes;
+        document.getElementById("lotSize").value = entry.lotSize;
+        document.getElementById("rMultiple").value = entry.rMultiple;
+        document.getElementById("setupGrade").value = entry.setupGrade || '';
+        document.getElementById("didFollowPlan").value = entry.didFollowPlan || '';
+        document.getElementById("emotionalState").value = entry.emotionalState || '';
+        document.getElementById("lessonsLearned").value = entry.lessonsLearned || '';
+        document.getElementById("notes").value = entry.notes || '';
 
-        // Handle image field
-        imageFile.value = ""; // Clear file input
-        if (entry.image) {
-          imageDataField.value = entry.image; // Store base64 in hidden field
-          imagePreview.src = entry.image;
+        // Handle image field (renamed to postTradeImage)
+        postTradeImageFile.value = ""; // Clear file input
+        if (entry.postTradeImage) {
+          postTradeImageDataField.value = entry.postTradeImage; // Store base64 in hidden field
+          imagePreview.src = entry.postTradeImage;
           imagePreviewContainer.classList.remove("hidden");
         } else {
-          imageDataField.value = "";
+          postTradeImageDataField.value = "";
           imagePreview.src = "";
           imagePreviewContainer.classList.add("hidden");
         }
@@ -3799,6 +1021,7 @@ const entry = {
        */
       function resetFormForNewEntry() {
         document.getElementById("entryId").value = "";
+        document.getElementById("tradeId").value = "";
         const submitBtn = tradeForm.querySelector('button[type="submit"]');
         submitBtn.textContent = "Save Trade";
         submitBtn.classList.remove("bg-orange-500", "hover:bg-orange-600");
@@ -3806,11 +1029,16 @@ const entry = {
         cancelEditBtn.classList.add("hidden");
 
         // Reset image fields
-        imageFile.value = "";
-        imageDataField.value = "";
+        postTradeImageFile.value = "";
+        postTradeImageDataField.value = "";
         imagePreview.src = "";
         imagePreviewContainer.classList.add("hidden");
         document.getElementById("tradeDate").valueAsDate = new Date(); // Reset date to today
+        document.getElementById("tradeTime").value = "";
+        document.getElementById("timeFrame").value = "";
+        document.getElementById("setupGrade").value = "";
+        document.getElementById("didFollowPlan").value = "";
+        document.getElementById("exitReason").value = "";
       }
 
       // Filter listener
@@ -3999,17 +1227,30 @@ const entry = {
         }
 
         const dataToExport = journalEntries.map((entry) => ({
-          ID: entry.id,
-          Date: entry.date,
-          Pair: entry.pair,
-          Strategy: entry.strategy,
-          Direction: entry.direction,
-          Result: entry.result,
-          Pips: entry.pips,
-          Notes: entry.notes,
-          Timestamp: entry.timestamp,
-          // Base64 Image data is too long and complex for CSV, so we omit it for simplicity
-          // Image_Base64: entry.image || "",
+            ID: entry.id,
+            tradeId: entry.tradeId,
+            date: entry.date,
+            time: entry.time,
+            pair: entry.pair,
+            direction: entry.direction,
+            strategy: entry.strategy,
+            timeFrame: entry.timeFrame,
+            entryPrice: entry.entryPrice,
+            slPrice: entry.slPrice,
+            tpPrice: entry.tpPrice,
+            exitPrice: entry.exitPrice,
+            exitReason: entry.exitReason,
+            pips: entry.pips,
+            lotSize: entry.lotSize,
+            rMultiple: entry.rMultiple,
+            setupGrade: entry.setupGrade,
+            didFollowPlan: entry.didFollowPlan,
+            emotionalState: entry.emotionalState,
+            lessonsLearned: entry.lessonsLearned,
+            notes: entry.notes,
+            // Use the actual Base64 string for image data
+            postTradeImage: entry.postTradeImage || "",
+            timestamp: entry.timestamp,
         }));
 
         const csv = Papa.unparse(dataToExport);
@@ -4034,7 +1275,7 @@ const entry = {
       importBtn.addEventListener("click", () => {
         if (
           !confirm(
-            "Importing data will ADD new entries from the CSV. Ensure your CSV is correctly formatted. Continue?"
+            "Importing data will ADD new entries from the CSV. Ensure your CSV is correctly formatted with all the required columns. Continue?"
           )
         ) {
           return;
@@ -4051,18 +1292,31 @@ const entry = {
               skipEmptyLines: true,
               complete: async (results) => {
                 const importedEntries = results.data
-                  .filter((row) => row.Date && row.Pair && row.Strategy) // Basic validation
+                  .filter((row) => row.date && row.pair && row.strategy) // Basic validation
                   .map((row) => ({
-                    // We generate a new ID and timestamp for imported items
-                    date: row.Date,
-                    pair: row.Pair.toUpperCase(),
-                    strategy: row.Strategy,
-                    direction: row.Direction || "Long",
-                    result: row.Result || "Break Even",
-                    pips: parseFloat(row.Pips) || null,
-                    image: null, // Images are not imported via CSV for simplicity
-                    notes: row.Notes || null,
-                    timestamp: row.Timestamp ? parseInt(row.Timestamp) : Date.now(),
+                    // We generate a new ID for the SQLite PK but keep the CSV's tradeId
+                    tradeId: row.tradeId || generateTradeId(),
+                    date: row.date,
+                    time: row.time || null,
+                    pair: row.pair.toUpperCase(),
+                    direction: row.direction || 'Long',
+                    strategy: row.strategy,
+                    timeFrame: row.timeFrame || null,
+                    entryPrice: parseFloat(row.entryPrice) || null,
+                    slPrice: parseFloat(row.slPrice) || null,
+                    tpPrice: parseFloat(row.tpPrice) || null,
+                    exitPrice: parseFloat(row.exitPrice) || null,
+                    exitReason: row.exitReason || 'Manual',
+                    pips: parseFloat(row.pips) || null,
+                    lotSize: parseFloat(row.lotSize) || null,
+                    rMultiple: parseFloat(row.rMultiple) || null,
+                    setupGrade: row.setupGrade || null,
+                    didFollowPlan: row.didFollowPlan || null,
+                    emotionalState: row.emotionalState || null,
+                    lessonsLearned: row.lessonsLearned || null,
+                    notes: row.notes || null,
+                    postTradeImage: row.postTradeImage || null,
+                    timestamp: row.timestamp ? parseInt(row.timestamp) : Date.now(),
                   }));
 
                 if (importedEntries.length === 0) {
@@ -4073,7 +1327,7 @@ const entry = {
                 try {
                     let importedCount = 0;
                     for (const entry of importedEntries) {
-                        // For imported data, we always treat them as new entries to get a new ID
+                        // For imported data, we always treat them as new entries to get a new internal ID
                         const newId = await addItem(STORE_ENTRIES, entry);
                         entry.id = newId;
                         journalEntries.push(entry);
@@ -4156,10 +1410,6 @@ const entry = {
               `
           });
           
-          // Optionally drop the database and recreate it for a complete clear, but DELETE FROM is usually sufficient.
-          // await Sqlite.dropDatabase({ database: db });
-          // await openDB();
-
           // Reset state
           journalEntries = [];
           tradingStrategies = [];
@@ -4179,154 +1429,10 @@ const entry = {
       // 7. Initialization
       // =========================================================================================================================
 
-<<<<<<< HEAD
       /**
        * Main initialization function for the app.
        */
       async function init() {
-=======
-              if (preInput) {
-                if (preInput.files && preInput.files.length) {
-                  entry.preTradeImage = await resizeAndConvertToBase64(
-                    preInput.files[0]
-                  );
-                } else if (preInput.dataset && preInput.dataset.existing) {
-                  entry.preTradeImage = preInput.dataset.existing;
-                }
-              }
-              if (postInput) {
-                if (postInput.files && postInput.files.length) {
-                  entry.postTradeImage = await resizeAndConvertToBase64(
-                    postInput.files[0]
-                  );
-                } else if (postInput.dataset && postInput.dataset.existing) {
-                  entry.postTradeImage = postInput.dataset.existing;
-                }
-              } // clear file input datasets so next edit will load fresh
-
-              // ... (Your logic for refreshing the UI) ...
-
-              if (preInput) {
-                preInput.value = "";
-                delete preInput.dataset.existing;
-              }
-              if (postInput) {
-                postInput.value = "";
-                delete postInput.dataset.existing;
-              }
-
-              // 💥 FIX: Clear all form fields (textareas, inputs, etc.)
-              // This stops the old entry data from being submitted as a new entry.
-              if (form) {
-                form.reset();
-              }
-
-              // ... (Rest of the code) ...
-
-              // determine editing or new
-              const editingId =
-                formEl.dataset.editingId || fd.get("id") || fd.get("entryId");
-              if (editingId) {
-                entry.id = Number(editingId);
-                await putEntry(entry);
-              } else {
-                // ensure id exists
-                entry.id = entry.id ? Number(entry.id) : Date.now();
-                await putEntry(entry);
-              }
-
-              // refresh UI: call render function if exists, else reload entries if function exists
-              if (typeof window.renderJournalEntries === "function") {
-                try {
-                  await window.renderJournalEntries();
-                } catch (e) {}
-              } else if (typeof window.loadEntries === "function") {
-                try {
-                  await window.loadEntries();
-                } catch (e) {}
-              } else {
-                // fallback: reload page
-                try {
-                  location.reload();
-                } catch (e) {}
-              }
-
-              // close modal if present
-              const modal = document.getElementById("addEntryModal");
-              if (modal) modal.classList.add("hidden");
-
-              // clear file input datasets so next edit will load fresh
-              if (preInput) {
-                preInput.value = "";
-                delete preInput.dataset.existing;
-              }
-              if (postInput) {
-                postInput.value = "";
-                delete postInput.dataset.existing;
-              }
-
-              // show success if function exists
-              if (typeof window.showMessageModal === "function") {
-                try {
-                  window.showMessageModal(
-                    "Entry saved successfully.",
-                    "success"
-                  );
-                } catch (e) {}
-              } else {
-                try {
-                  alert("Entry saved successfully.");
-                } catch (e) {}
-              }
-            } catch (err) {
-              console.error("handleFormSave error", err);
-              try {
-                alert("Failed to save entry: " + err.message);
-              } catch (e) {}
-            }
-          }
-
-          // enhance journalList rendering by ensuring thumbnails are set after render
-          const origRender = window.renderJournalEntries;
-          if (typeof origRender === "function") {
-            window.renderJournalEntries = async function () {
-              await origRender();
-              // apply thumbnails on all rendered cards
-              try {
-                const list =
-                  document.getElementById("journalList") ||
-                  document.querySelector(".journal-list");
-                if (!list) return;
-                const items = list.querySelectorAll("[data-entry-id]");
-                for (const el of items) {
-                  const id =
-                    el.dataset.entryId || el.getAttribute("data-entry-id");
-                  if (!id) continue;
-                  const data = await getEntryById(Number(id));
-                  if (!data) continue;
-                  // find img placeholders inside card
-                  const preImg = el.querySelector(
-                    "#preThumb, .preThumb, .pre-trade-img, img.pre-trade"
-                  );
-                  const postImg = el.querySelector(
-                    "#postThumb, .postThumb, .post-trade-img, img.post-trade"
-                  );
-                  if (preImg && data.preTradeImage)
-                    preImg.src = data.preTradeImage;
-                  if (postImg && data.postTradeImage)
-                    postImg.src = data.postTradeImage;
-                }
-              } catch (e) {
-                console.warn(e);
-              }
-            };
-          }
-        }); // DOMContentLoaded
-      })();
-    </script>
-    <script>
-      async function initApp() {
->>>>>>> a0823573854bb126707a7d2b60927a607b5f1138
         const splash = document.getElementById("splash-screen");
         const ring = document.getElementById("splash-ring");
         const percentText = document.getElementById("splash-percent");
@@ -4344,7 +1450,7 @@ const entry = {
           splash.style.display = "flex";
           updateSplash(0, "Opening database...");
 
-          // 1. Open/Create SQLite DB and Tables
+          // 1. Open/Create SQLite DB and Tables (with full CSV schema)
           await openDB();
           updateSplash(20, "Loading all data...");
 
@@ -4383,228 +1489,5 @@ const entry = {
 
       window.addEventListener("DOMContentLoaded", init);
     </script>
-<<<<<<< HEAD
   </body>
 </html>
-=======
-  
-<!-- BEGIN RUNTIME OVERRIDE: FORCE BLOB IMAGE SAVING -->
-<script>
-(function(){
-  // Helpers
-  async function fileToBlob(file, maxWidth=800) {
-    if (!file) return null;
-    if (file instanceof Blob) return file;
-    return await new Promise((resolve, reject) => {
-      try {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            try {
-              const canvas = document.createElement('canvas');
-              const scale = Math.min(1, maxWidth / img.width);
-              canvas.width = Math.round(img.width * scale);
-              canvas.height = Math.round(img.height * scale);
-              const ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-              canvas.toBlob((blob)=>resolve(blob), 'image/jpeg', 0.8);
-            } catch (err) { reject(err); }
-          };
-          img.onerror = reject;
-          img.src = e.target.result;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      } catch (err) { reject(err); }
-    });
-  }
-
-  function blobToBase64(blob){
-    return new Promise((resolve,reject)=>{
-      if (!blob) return resolve(null);
-      const r = new FileReader();
-      r.onloadend = ()=>{ const parts = r.result.split(','); resolve(parts[1]); };
-      r.onerror = reject;
-      r.readAsDataURL(blob);
-    });
-  }
-
-  function setImgSrc(el, data){
-    if(!el) return;
-    try{
-      if (data && (typeof Blob !== 'undefined') && data instanceof Blob){
-        if (el.dataset.objurl) { URL.revokeObjectURL(el.dataset.objurl); delete el.dataset.objurl; }
-        const url = URL.createObjectURL(data);
-        el.src = url;
-        el.dataset.objurl = url;
-      } else if (data){
-        el.src = data;
-      } else {
-        el.removeAttribute('src');
-      }
-    } catch(e){ console.warn(e); }
-  }
-
-  // Intercept the form submit early in capture phase to prevent existing handlers that convert to base64
-  document.addEventListener('submit', async function(ev){
-    // Only intercept the main journal form
-    try{
-      const form = ev.target;
-      if (!form || !(form.id === 'journalForm' || form.querySelector('#entryPrice') || form.querySelector('[name=\"entryPrice\"]'))) return;
-      // Stop other handlers from running
-      ev.stopImmediatePropagation();
-      ev.preventDefault();
-
-      // Build entry object (similar to app's logic)
-      const fd = new FormData(form);
-      const entry = {};
-      for (const [k,v] of fd.entries()) entry[k]=v;
-
-      // strategies
-      if (typeof window.getSelectedStrategies === 'function') {
-        const sel = window.getSelectedStrategies();
-        if (sel && sel.length) entry.strategies = sel;
-      }
-
-      // handle images: if file selected -> convert to Blob; else if dataset.existingBlob -> reuse DB blob; else if dataset.existing (string) -> keep string
-      const preInput = document.getElementById('preTradeImage');
-      const postInput = document.getElementById('postTradeImage');
-
-      async function resolveInput(inputEl){
-        if (!inputEl) return null;
-        if (inputEl.files && inputEl.files.length) {
-          return await fileToBlob(inputEl.files[0]);
-        }
-        if (inputEl.dataset && inputEl.dataset.existingblob === '1') {
-          // indicate to reuse existing blob: we set special marker __REUSE_BLOB__
-          return '__REUSE_BLOB__';
-        }
-        if (inputEl.dataset && inputEl.dataset.existing) return inputEl.dataset.existing;
-        return null;
-      }
-
-      const preResolved = await resolveInput(preInput);
-      const postResolved = await resolveInput(postInput);
-
-      // If editing an entry, we should fetch the existing entry to reuse blobs when needed
-      let editingId = null;
-      if (form.dataset && form.dataset.editingId) editingId = Number(form.dataset.editingId);
-      if (!editingId) {
-        // try other possible sources
-        if (entry.id) editingId = Number(entry.id);
-      }
-
-      // If reuse markers present and editingId known, fetch existing and reuse actual blob
-      if (editingId && (preResolved==='__REUSE_BLOB__' || postResolved==='__REUSE_BLOB__')){
-        if (typeof window.getEntryById === 'function') {
-          try{
-            const existing = await window.getEntryById(Number(editingId));
-            if (preResolved==='__REUSE_BLOB__' && existing && existing.preTradeImage) entry.preTradeImage = existing.preTradeImage;
-            else if (preResolved && preResolved!=='__REUSE_BLOB__') entry.preTradeImage = preResolved;
-            if (postResolved==='__REUSE_BLOB__' && existing && existing.postTradeImage) entry.postTradeImage = existing.postTradeImage;
-            else if (postResolved && postResolved!=='__REUSE_BLOB__') entry.postTradeImage = postResolved;
-          } catch(e){ 
-            if (preResolved && preResolved!=='__REUSE_BLOB__') entry.preTradeImage = preResolved;
-            if (postResolved && postResolved!=='__REUSE_BLOB__') entry.postTradeImage = postResolved;
-          }
-        } else {
-          if (preResolved && preResolved!=='__REUSE_BLOB__') entry.preTradeImage = preResolved;
-          if (postResolved && postResolved!=='__REUSE_BLOB__') entry.postTradeImage = postResolved;
-        }
-      } else {
-        if (preResolved && preResolved!=='__REUSE_BLOB__') entry.preTradeImage = preResolved;
-        if (postResolved && postResolved!=='__REUSE_BLOB__') entry.postTradeImage = postResolved;
-      }
-
-      // If entries should store blob objects directly, keep Blobs. For any string dataURLs, they remain strings.
-      // Save entry to DB using existing putItem/addItem/putEntry functions if available
-      if (editingId) entry.id = editingId;
-      try {
-        if (typeof window.putEntry === 'function') {
-          await window.putEntry(entry);
-        } else if (typeof window.putItem === 'function') {
-          await window.putItem('entries', entry);
-        } else if (typeof window.addItem === 'function' && !editingId) {
-          await window.addItem('entries', entry);
-        } else if (typeof window.putItem === 'function') {
-          await window.putItem('entries', entry);
-        } else {
-          // fallback to indexedDB direct put
-          if (typeof window.openDB === 'function') {
-            const db = await window.openDB();
-            const tx = db.transaction('entries','readwrite');
-            tx.objectStore('entries').put(entry);
-            await tx.complete;
-          }
-        }
-      } catch(err){
-        console.error('Override save failed', err);
-        try { alert('Failed to save entry (override): '+err.message); } catch(e) {}
-        return;
-      }
-
-      // Refresh UI: try to call existing refresh functions
-      if (typeof window.renderJournalEntries === 'function') {
-        try { await window.renderJournalEntries(); } catch(e) {}
-      } else if (typeof window.loadEntries === 'function') {
-        try { await window.loadEntries(); } catch(e) {}
-      } else {
-        try { location.reload(); } catch(e) {}
-      }
-
-      // Clean up form
-      try { form.reset(); } catch(e) {}
-      const modal = document.getElementById('addEntryModal');
-      if (modal) modal.classList.add('hidden');
-
-      // Show success if available
-      if (typeof window.showMessageModal === 'function') {
-        try { window.showMessageModal('Entry saved successfully (blob override).','success'); } catch(e) {}
-      } else {
-        try { console.log('Saved (override)'); } catch(e) {}
-      }
-    } catch(e){
-      console.error('Submit override error', e);
-    }
-  }, true /* useCapture to run before default handlers */);
-  
-  // Also patch image thumbnail application to support Blob -> objectURL
-  function patchRenderThumbnails(){
-    try{
-      const list = document.getElementById('journalList') || document.querySelector('.journal-list');
-      if (!list) return;
-      // when renderJournalEntries runs it will call existing logic which sets src to string;
-      // We will post-process cards to convert any Blob stored in DB to objectURLs for img.src
-      if (typeof window.renderJournalEntries === 'function') {
-        const old = window.renderJournalEntries;
-        window.renderJournalEntries = async function(filteredEntries){
-          await old(filteredEntries);
-          try{
-            const items = document.querySelectorAll('[data-entry-id]');
-            for (const el of items){
-              const id = el.dataset.entryId || el.getAttribute('data-entry-id');
-              if (!id) continue;
-              if (typeof window.getEntryById === 'function') {
-                const data = await window.getEntryById(Number(id));
-                if (!data) continue;
-                const preImg = el.querySelector('#preThumb, .preThumb, .pre-trade-img, img.pre-trade');
-                const postImg = el.querySelector('#postThumb, .postThumb, .post-trade-img, img.post-trade');
-                if (preImg) setImgSrc(preImg, data.preTradeImage);
-                if (postImg) setImgSrc(postImg, data.postTradeImage);
-              }
-            }
-          } catch(e){ console.warn(e); }
-        }
-      }
-    } catch(e){ console.warn('patchRenderThumbnails failed', e); }
-  }
-  // Run once DOM ready
-  if (document.readyState === 'complete' || document.readyState === 'interactive') patchRenderThumbnails();
-  else document.addEventListener('DOMContentLoaded', patchRenderThumbnails);
-})();
-</script>
-<!-- END RUNTIME OVERRIDE -->
-</body>
-</html>
->>>>>>> a0823573854bb126707a7d2b60927a607b5f1138
