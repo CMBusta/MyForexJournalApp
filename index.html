@@ -369,25 +369,46 @@
             />
           </div>
 
-          <div class="lg:col-span-2">
-            <label
-              for="postTradeImageFile"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Trade Screenshot (Optional)</label
-            >
-            <input
-              type="file"
-              id="postTradeImageFile"
-              accept="image/*"
-              class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-gray-700 dark:file:text-indigo-400 dark:file:hover:bg-gray-600"
-            />
-            <div id="imagePreviewContainer" class="mt-2 hidden">
-              <img id="imagePreview" class="w-24 h-24 object-cover rounded-md" alt="Trade Screenshot Preview" />
-              <button type="button" id="clearImageBtn" class="mt-1 text-xs text-red-500 hover:text-red-700">Remove Image</button>
+          <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <div>
+              <label
+                for="preTradeImageFile"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Pre-Trade Screenshot (Optional)</label
+              >
+              <input
+                type="file"
+                id="preTradeImageFile"
+                accept="image/*"
+                class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-gray-700 dark:file:text-indigo-400 dark:file:hover:bg-gray-600"
+              />
+              <div id="preImagePreviewContainer" class="mt-2 hidden">
+                <img id="preImagePreview" class="w-24 h-24 object-cover rounded-md" alt="Pre-Trade Screenshot Preview" />
+                <button type="button" id="clearPreImageBtn" class="mt-1 text-xs text-red-500 hover:text-red-700">Remove Image</button>
+              </div>
+              <input type="hidden" id="preTradeImageData" />
             </div>
-            <input type="hidden" id="postTradeImageData" />
-          </div>
 
+            <div>
+              <label
+                for="postTradeImageFile"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Post-Trade Screenshot (Optional)</label
+              >
+              <input
+                type="file"
+                id="postTradeImageFile"
+                accept="image/*"
+                class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-gray-700 dark:file:text-indigo-400 dark:file:hover:bg-gray-600"
+              />
+              <div id="postImagePreviewContainer" class="mt-2 hidden">
+                <img id="postImagePreview" class="w-24 h-24 object-cover rounded-md" alt="Post-Trade Screenshot Preview" />
+                <button type="button" id="clearPostImageBtn" class="mt-1 text-xs text-red-500 hover:text-red-700">Remove Image</button>
+              </div>
+              <input type="hidden" id="postTradeImageData" />
+            </div>
+          </div>
           <div class="lg:col-span-2">
             <label for="lessonsLearned" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lessons Learned (Optional)</label>
             <textarea
@@ -397,7 +418,7 @@
             ></textarea>
           </div>
           
-          <div class="lg:col-span-4">
+          <div class="lg:col-span-2">
             <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Notes (Optional)</label>
             <textarea
               id="notes"
@@ -523,7 +544,8 @@
       }
       
       /**
-       * Open the SQLite database and initialize the tables with the full CSV structure.
+       * Open the SQLite database and initialize the tables with the full CSV structure,
+       * now including preTradeImage.
        */
       async function openDB() {
           try {
@@ -537,7 +559,7 @@
               db = database;
 
               // SQL statements to create tables if they do not exist
-              // Updated to match all CSV columns (including a primary key 'id' for internal use)
+              // *** UPDATED: Added preTradeImage TEXT column ***
               const statements = `
                   CREATE TABLE IF NOT EXISTS ${STORE_ENTRIES} (
                       id INTEGER PRIMARY KEY,
@@ -561,6 +583,7 @@
                       emotionalState TEXT,
                       lessonsLearned TEXT,
                       notes TEXT,
+                      preTradeImage TEXT,
                       postTradeImage TEXT,
                       timestamp INTEGER NOT NULL
                   );
@@ -571,7 +594,7 @@
               `;
 
               await Sqlite.execute({ database: db, statements: statements });
-              console.log("SQLite Database initialized with full schema.");
+              console.log("SQLite Database initialized with full schema (including preTradeImage).");
           } catch (err) {
               console.error("SQLite Initialization failed:", err);
               throw err;
@@ -586,12 +609,12 @@
        */
       async function addItem(storeName, item) {
           if (storeName === STORE_ENTRIES) {
-              // Extract all entry columns
+              // *** UPDATED: Added preTradeImage to columns ***
               const columns = [
                   "tradeId", "date", "time", "pair", "direction", "strategy", "timeFrame",
                   "entryPrice", "slPrice", "tpPrice", "exitPrice", "exitReason", "pips",
                   "lotSize", "rMultiple", "setupGrade", "didFollowPlan", "emotionalState",
-                  "lessonsLearned", "notes", "postTradeImage", "timestamp"
+                  "lessonsLearned", "notes", "preTradeImage", "postTradeImage", "timestamp"
               ];
               
               const values = columns.map(col => item[col] || null);
@@ -670,12 +693,20 @@
       const deleteAllBtn = document.getElementById("deleteAllBtn");
       const filterText = document.getElementById("filterText");
 
-      // Renamed for consistency with CSV: postTradeImage
+      // *** UPDATED: References for pre-trade image fields ***
+      const preTradeImageFile = document.getElementById("preTradeImageFile");
+      const preTradeImageDataField = document.getElementById("preTradeImageData");
+      const preImagePreview = document.getElementById("preImagePreview");
+      const preImagePreviewContainer = document.getElementById("preImagePreviewContainer");
+      const clearPreImageBtn = document.getElementById("clearPreImageBtn");
+      
+      // Post-trade image references
       const postTradeImageFile = document.getElementById("postTradeImageFile");
       const postTradeImageDataField = document.getElementById("postTradeImageData");
-      const imagePreview = document.getElementById("imagePreview");
-      const imagePreviewContainer = document.getElementById("imagePreviewContainer");
-      const clearImageBtn = document.getElementById("clearImageBtn");
+      const postImagePreview = document.getElementById("postImagePreview");
+      const postImagePreviewContainer = document.getElementById("postImagePreviewContainer");
+      const clearPostImageBtn = document.getElementById("clearPostImageBtn");
+
       const cancelEditBtn = document.getElementById("cancelEditBtn");
 
       // =========================================================================================================================
@@ -724,9 +755,14 @@
         const emotionalState = document.getElementById("emotionalState").value.trim() || null;
         const lessonsLearned = document.getElementById("lessonsLearned").value.trim() || null;
         const notes = document.getElementById("notes").value.trim() || null;
+
+        // *** UPDATED: Handle two image fields ***
+        let preTradeImage = preTradeImageDataField.value || null;
         let postTradeImage = postTradeImageDataField.value || null;
 
-        // Handle new image upload during submission
+        if (preTradeImageFile.files.length > 0) {
+          preTradeImage = await fileToBase64(preTradeImageFile.files[0]);
+        }
         if (postTradeImageFile.files.length > 0) {
           postTradeImage = await fileToBase64(postTradeImageFile.files[0]);
         }
@@ -756,6 +792,7 @@
           emotionalState,
           lessonsLearned,
           notes,
+          preTradeImage, // *** NEW FIELD ***
           postTradeImage,
           timestamp: entryId ? journalEntries.find(e => e.id === parseInt(entryId)).timestamp : Date.now(),
         };
@@ -793,32 +830,42 @@
 
       /**
        * Initializes image file listeners for preview/clearing.
+       * @param {string} prefix - 'pre' or 'post'
        */
-      function initImageListeners() {
-        // Preview image on file selection
-        postTradeImageFile.addEventListener("change", (e) => {
+      function initSingleImageListeners(prefix) {
+        const fileInput = document.getElementById(`${prefix}TradeImageFile`);
+        const dataField = document.getElementById(`${prefix}TradeImageData`);
+        const preview = document.getElementById(`${prefix}ImagePreview`);
+        const container = document.getElementById(`${prefix}ImagePreviewContainer`);
+        const clearBtn = document.getElementById(`clear${prefix.charAt(0).toUpperCase() + prefix.slice(1)}ImageBtn`);
+
+        fileInput.addEventListener("change", (e) => {
           const file = e.target.files[0];
           if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
-              imagePreview.src = e.target.result;
-              imagePreviewContainer.classList.remove("hidden");
-              postTradeImageDataField.value = ""; // Clear hidden field if new file is selected
+              preview.src = e.target.result;
+              container.classList.remove("hidden");
+              dataField.value = ""; // Clear hidden field if new file is selected
             };
             reader.readAsDataURL(file);
           } else {
-            imagePreviewContainer.classList.add("hidden");
-            imagePreview.src = "";
+            container.classList.add("hidden");
+            preview.src = "";
           }
         });
 
-        // Clear button to remove the image (either new or existing)
-        clearImageBtn.addEventListener("click", () => {
-          postTradeImageFile.value = "";
-          postTradeImageDataField.value = "";
-          imagePreview.src = "";
-          imagePreviewContainer.classList.add("hidden");
+        clearBtn.addEventListener("click", () => {
+          fileInput.value = "";
+          dataField.value = "";
+          preview.src = "";
+          container.classList.add("hidden");
         });
+      }
+      
+      function initImageListeners() {
+          initSingleImageListeners('pre'); // *** NEW: Initialize pre-trade listeners ***
+          initSingleImageListeners('post');
       }
 
       /**
@@ -848,7 +895,6 @@
           return { text: resultText, class: resultClass };
       }
 
-
       /**
        * Renders the list of journal entries.
        */
@@ -871,6 +917,14 @@
             
             // Helper function for display
             const formatValue = (value, unit = "") => value !== null ? `<span class="text-sm text-gray-600 dark:text-gray-300">${value}${unit}</span>` : '';
+            
+            // Helper to render an image container
+            const renderImage = (base64, type) => base64 
+                ? `<div class="flex flex-col items-center">
+                      <img src="${base64}" alt="${type} Screenshot" class="w-16 h-16 object-cover rounded-md cursor-pointer mb-1" onclick="viewImage('${base64}')" />
+                      <span class="text-xs text-gray-500 dark:text-gray-400">${type}</span>
+                   </div>`
+                : '';
 
             return `
               <div
@@ -915,11 +969,10 @@
                   }
 
                   <div class="flex justify-between items-end mt-3">
-                    ${
-                      entry.postTradeImage
-                        ? `<img src="${entry.postTradeImage}" alt="Trade Screenshot" class="w-20 h-20 object-cover rounded-md cursor-pointer" onclick="viewImage('${entry.postTradeImage}')" />`
-                        : ""
-                    }
+                    <div class="flex space-x-4">
+                      ${renderImage(entry.preTradeImage, 'Pre')}
+                      ${renderImage(entry.postTradeImage, 'Post')}
+                    </div>
                     <div class="flex space-x-2">
                         <button
                           onclick="editEntry(${entry.id})"
@@ -976,16 +1029,28 @@
         document.getElementById("lessonsLearned").value = entry.lessonsLearned || '';
         document.getElementById("notes").value = entry.notes || '';
 
-        // Handle image field (renamed to postTradeImage)
-        postTradeImageFile.value = ""; // Clear file input
+        // *** UPDATED: Handle Pre-Trade Image ***
+        preTradeImageFile.value = ""; 
+        if (entry.preTradeImage) {
+            preTradeImageDataField.value = entry.preTradeImage;
+            preImagePreview.src = entry.preTradeImage;
+            preImagePreviewContainer.classList.remove("hidden");
+        } else {
+            preTradeImageDataField.value = "";
+            preImagePreview.src = "";
+            preImagePreviewContainer.classList.add("hidden");
+        }
+        
+        // Handle Post-Trade Image
+        postTradeImageFile.value = ""; 
         if (entry.postTradeImage) {
-          postTradeImageDataField.value = entry.postTradeImage; // Store base64 in hidden field
-          imagePreview.src = entry.postTradeImage;
-          imagePreviewContainer.classList.remove("hidden");
+          postTradeImageDataField.value = entry.postTradeImage; 
+          postImagePreview.src = entry.postTradeImage;
+          postImagePreviewContainer.classList.remove("hidden");
         } else {
           postTradeImageDataField.value = "";
-          imagePreview.src = "";
-          imagePreviewContainer.classList.add("hidden");
+          postImagePreview.src = "";
+          postImagePreviewContainer.classList.add("hidden");
         }
 
         // Change button text and show cancel button
@@ -1028,11 +1093,17 @@
         submitBtn.classList.add("bg-indigo-600");
         cancelEditBtn.classList.add("hidden");
 
-        // Reset image fields
+        // *** UPDATED: Reset both image fields ***
+        preTradeImageFile.value = "";
+        preTradeImageDataField.value = "";
+        preImagePreview.src = "";
+        preImagePreviewContainer.classList.add("hidden");
+        
         postTradeImageFile.value = "";
         postTradeImageDataField.value = "";
-        imagePreview.src = "";
-        imagePreviewContainer.classList.add("hidden");
+        postImagePreview.src = "";
+        postImagePreviewContainer.classList.add("hidden");
+        
         document.getElementById("tradeDate").valueAsDate = new Date(); // Reset date to today
         document.getElementById("tradeTime").value = "";
         document.getElementById("timeFrame").value = "";
@@ -1248,7 +1319,8 @@
             emotionalState: entry.emotionalState,
             lessonsLearned: entry.lessonsLearned,
             notes: entry.notes,
-            // Use the actual Base64 string for image data
+            // *** UPDATED: Include both image columns ***
+            preTradeImage: entry.preTradeImage || "",
             postTradeImage: entry.postTradeImage || "",
             timestamp: entry.timestamp,
         }));
@@ -1315,6 +1387,8 @@
                     emotionalState: row.emotionalState || null,
                     lessonsLearned: row.lessonsLearned || null,
                     notes: row.notes || null,
+                    // *** UPDATED: Map both image columns from CSV ***
+                    preTradeImage: row.preTradeImage || null, 
                     postTradeImage: row.postTradeImage || null,
                     timestamp: row.timestamp ? parseInt(row.timestamp) : Date.now(),
                   }));
@@ -1450,7 +1524,7 @@
           splash.style.display = "flex";
           updateSplash(0, "Opening database...");
 
-          // 1. Open/Create SQLite DB and Tables (with full CSV schema)
+          // 1. Open/Create SQLite DB and Tables (with full schema)
           await openDB();
           updateSplash(20, "Loading all data...");
 
@@ -1472,7 +1546,7 @@
 
           // 6. Set default date to today and initialize listeners
           document.getElementById("tradeDate").valueAsDate = new Date();
-          initImageListeners(); // Initialize image handlers
+          initImageListeners(); // Initialize image handlers (now handles pre and post)
           updateSplash(100, "Ready!");
         } catch (err) {
           console.error("Initialization failed:", err);
